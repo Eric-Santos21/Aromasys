@@ -95,7 +95,7 @@
         </div> <!-- Fim do #meus-pedidos-pane -->
 
         <!-- ======================= -->
-        <!-- PAINEL 2: MEUS DADOS (COM PLACEHOLDERS) -->
+        <!-- PAINEL 2: MEUS DADOS -->
         <!-- ======================= -->
         <div id="meus-dados-pane" class="profile-pane">
             <h2>Meus Dados</h2>
@@ -103,24 +103,20 @@
                 <form class="card-form">
                     <div class="form-group">
                         <label for="nome-completo">Nome Completo</label>
-                        <!-- (MUDANÇA) de 'value' para 'placeholder' -->
                         <input type="text" id="nome-completo" placeholder="(Nome do Usuário)">
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <!-- (MUDANÇA) de 'value' para 'placeholder' -->
                         <input type="email" id="email" placeholder="(usuario@email.com)"> 
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="cpf">CPF</label>
-                            <!-- (MUDANÇA) de 'value' para 'placeholder' -->
                             <input type="text" id="cpf" placeholder="123.456.789-00" maxlength="14"> 
                         </div>
                         <div class="form-group">
                             <label for="telefone">Telefone / Celular</label>
-                            <!-- (MUDANÇA) de 'value' para 'placeholder' -->
-                            <input type="text" id="telefone" placeholder="(12) 34567-8910" maxlength="15">
+                            <input type="text" id="telefone" placeholder="(83) 91234-5678" maxlength="15">
                         </div>
                     </div>
                     <hr class="form-divider">
@@ -175,7 +171,7 @@
 </div>
 
 <!-- ======================= -->
-<!-- SCRIPT (Sem alterações) -->
+<!-- (ATUALIZADO) SCRIPT PARA ABAS E MÁSCARAS -->
 <!-- ======================= -->
 <script>
     // --- Função que SÓ permite números ---
@@ -191,9 +187,22 @@
         }
     }
 
+    // --- (NOVO) Função que SÓ permite letras e espaço ---
+    function restrictToLetters(event) {
+        if (event.isComposing || event.keyCode === 229) return;
+        if ([46, 8, 9, 27, 13, 32].includes(event.keyCode) || 
+            (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
+            (event.keyCode >= 35 && event.keyCode <= 40)) {
+            return; 
+        }
+        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105)) {
+            event.preventDefault();
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         
-        // --- Lógica das Abas (Existente) ---
+        // --- Lógica das Abas ---
         const menuItems = document.querySelectorAll('#profile-menu li');
         const panes = document.querySelectorAll('.profile-pane');
 
@@ -210,8 +219,15 @@
             }
         });
 
-        // --- Lógica das Máscaras (Existente) ---
+        // --- Lógica das Máscaras ---
         
+        // (NOVO) Campo Nome Completo
+        const nomeInput = document.getElementById('nome-completo');
+        if (nomeInput) {
+            nomeInput.addEventListener('keydown', restrictToLetters);
+        }
+
+        // --- Campo CPF ---
         const cpfInput = document.getElementById('cpf');
         if (cpfInput) {
             cpfInput.addEventListener('keydown', restrictToNumbers);
@@ -228,6 +244,7 @@
             });
         }
 
+        // --- Campo Telefone ---
         const telefoneInput = document.getElementById('telefone');
         if (telefoneInput) {
             telefoneInput.addEventListener('keydown', restrictToNumbers);

@@ -56,12 +56,12 @@
 </body>
 
 <!-- ======================= -->
-<!-- (NOVO) SCRIPT PARA MÁSCARAS -->
+<!-- (ATUALIZADO) SCRIPT PARA MÁSCARAS -->
 <!-- ======================= -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
-    // Função que só permite números
+    // Função que SÓ permite números
     function restrictToNumbers(event) {
         if (event.isComposing || event.keyCode === 229) return;
         if ([46, 8, 9, 27, 13, 110, 190].includes(event.keyCode) ||
@@ -74,14 +74,31 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // (NOVA FUNÇÃO) Função que SÓ permite letras e espaço
+    function restrictToLetters(event) {
+        if (event.isComposing || event.keyCode === 229) return;
+        if ([46, 8, 9, 27, 13, 32].includes(event.keyCode) || 
+            (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
+            (event.keyCode >= 35 && event.keyCode <= 40)) {
+            return; 
+        }
+        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105)) {
+            event.preventDefault();
+        }
+    }
+
+    // --- (NOVO) Campo Nome Completo ---
+    const nomeInput = document.getElementById('nome-completo');
+    if (nomeInput) {
+        nomeInput.addEventListener('keydown', restrictToLetters);
+    }
+
     // --- Campo CPF ---
     const cpfInput = document.getElementById('cpf');
     if (cpfInput) {
         cpfInput.addEventListener('keydown', restrictToNumbers);
-        
-        // Adiciona os pontos e traço
         cpfInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, ''); // Só números
+            let value = e.target.value.replace(/\D/g, ''); 
             if (value.length > 9) {
                 value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
             } else if (value.length > 6) {
@@ -97,8 +114,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const telefoneInput = document.getElementById('telefone');
     if (telefoneInput) {
         telefoneInput.addEventListener('keydown', restrictToNumbers);
-
-        // Adiciona parênteses e traço
         telefoneInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
             if (value.length > 10) {
