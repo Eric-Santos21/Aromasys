@@ -1,0 +1,229 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="checkout-stepper">
+    <div class="step active"> <div class="step-number">1</div>
+        <div class="step-label">Sacola</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step"> <div class="step-number">2</div>
+        <div class="step-label">Entrega</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step"> <div class="step-number">3</div>
+        <div class="step-label">Pagamento</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step"> <div class="step-number">4</div>
+        <div class="step-label">Sucesso</div>
+    </div>
+</div>
+
+<div class="cart-page-container">
+    
+    <div class="cart-items-list">
+        <h2>Minha Sacola</h2>
+        {% if cart_items %}
+            {% for item in cart_items %}
+            <div class="cart-item" data-price="{{ item.price }}"> 
+                <div class="cart-item-image">
+                    <img src="{{ item.image_url }}" alt="{{ item.name }}">
+                </div>
+                <div class="cart-item-info">
+                    <h3>{{ item.name }}</h3>
+                    <p>{{ item.description }}</p>
+                </div>
+                <div class="cart-item-quantity">
+                    <button class="quantity-btn" data-action="decrement">-</button>
+                    <input type="text" class="quantity-input" value="{{ item.quantity }}" readonly>
+                    <button class="quantity-btn" data-action="increment">+</button>
+                </div>
+                <div class="cart-item-price">
+                    <span class="item-total-price">R$ {{ "%.2f"|format(item.price * item.quantity) }}</span>
+                    <small>R$ {{ "%.2f"|format(item.price) }} / cada</small>
+                </div>
+                <div class="cart-item-remove">
+                    <button class="remove-btn">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="cart-empty">
+                <h3>Sua sacola está vazia</h3>
+                <p>Adicione produtos do catálogo para vê-los aqui.</p>
+                <a href="{{ url_for('home') }}" class="btn-primary">Ver Produtos</a>
+            </div>
+        {% endif %}
+    </div>
+
+    {% if cart_items %}
+    <div class="cart-summary" data-frete="{{ frete }}" style="display: block;">
+        <h3>Resumo do Pedido</h3>
+        <div class="summary-row">
+            <span>Subtotal</span>
+            <span id="cart-subtotal">R$ {{ "%.2f"|format(subtotal) }}</span>
+        </div>
+        <div class="summary-row">
+            <span>Frete</span>
+            <span id="cart-frete">R$ {{ "%.2f"|format(frete) }}</span>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-total">
+            <span>Total</span>
+            <strong id="cart-total">R$ {{ "%.2f"|format(total) }}</strong>
+        </div>
+        <a href="{{ url_for('confirmacao') }}" class="btn-checkout">
+            Finalizar Compra
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    // ===================================
+    // FUNÇÃO 1: Mostrar Notificação (Toast)
+    // ===================================
+    function showToast(message) {
+        // Encontra o container principal onde os toasts vão aparecer
+        const container = document.getElementById('toast-container');
+        // Cria um novo elemento <div>
+        const toast = document.createElement('div');
+        // Adiciona a classe 'toast' (para o CSS) e define o texto
+        toast.className = 'toast';
+        toast.textContent = message;
+
+        // Adiciona o novo toast ao container
+        container.appendChild(toast);
+
+        // Força a animação de entrada (fade-in / slide-in)
+        requestAnimationFrame(() => {
+            toast.classList.add('show');
+        });
+
+        // Define um tempo para o toast desaparecer (3 segundos)
+        setTimeout(() => {
+            // Inicia a animação de saída (fade-out)
+            toast.classList.remove('show');
+            
+            // Espera a animação de saída terminar (0.5s) antes de remover
+            // o elemento do HTML para evitar um "salto"
+            setTimeout(() => {
+                if (container.contains(toast)) {
+                    container.removeChild(toast);
+                }
+            }, 500); // 500ms = 0.5 segundos
+        }, 3000); // 3000ms = 3 segundos
+    }
+
+    // ===================================
+    // FUNÇÃO 2: Formatar número para Moeda (R$)
+    // ===================================
+    function formatCurrency(value) {
+        // Converte um número (ex: 88.8) para o formato "R$ 88,80"
+        return value.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        });
+    }
+
+    // ===================================
+    // FUNÇÃO 3: Atualizar o Resumo do Carrinho
+    // ===================================
+    function updateCartSummary() {
+        let subtotal = 0;
+        // Pega todos os itens que estão no carrinho
+        const cartItems = document.querySelectorAll('.cart-item');
+
+        // 1. Loop para calcular o novo subtotal
+        cartItems.forEach(item => {
+            const price = parseFloat(item.dataset.price); // Pega o preço (ex: 26.90)
+            const quantity = parseInt(item.querySelector('.quantity-input').value); // Pega a quantidade (ex: 2)
+            subtotal += price * quantity; // Soma ao subtotal
+        });
+
+        // 2. Pega o frete
+        const summaryBox = document.querySelector('.cart-summary');
+        // Se o summaryBox não existir (carrinho ficou vazio), para a função
+        if (!summaryBox) return;
+
+        const frete = parseFloat(summaryBox.dataset.frete);
+        const total = subtotal + frete;
+
+        // 3. Atualiza os valores no HTML
+        document.getElementById('cart-subtotal').textContent = formatCurrency(subtotal);
+        document.getElementById('cart-total').textContent = formatCurrency(total);
+
+        // 4. Se o carrinho ficar vazio, mostra a mensagem de "carrinho vazio"
+        if (cartItems.length === 0) {
+            document.querySelector('.cart-items-list').innerHTML = `
+                <div class="cart-empty">
+                    <h3>Sua sacola está vazia</h3>
+                    <p>Adicione produtos do catálogo para vê-los aqui.</p>
+                    <a href="/" class="btn-primary">Ver Produtos</a>
+                </div>`;
+            // Esconde o box de resumo
+            summaryBox.style.display = 'none';
+        }
+    }
+
+    // ===================================
+    // EVENT LISTENERS (Ouvintes de Ação)
+    // ===================================
+    // Roda o script principal apenas quando o HTML estiver 100% carregado
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // --- Ouvinte para Botões de Quantidade (+ / -) ---
+        document.querySelectorAll('.quantity-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const action = this.dataset.action; // 'increment' ou 'decrement'
+                const input = this.parentElement.querySelector('.quantity-input');
+                let currentValue = parseInt(input.value);
+
+                if (action === 'increment') {
+                    currentValue++;
+                    showToast('Item adicionado');
+                } else if (action === 'decrement' && currentValue > 1) {
+                    currentValue--;
+                    showToast('Item reduzido');
+                }
+
+                // Atualiza o valor no input
+                input.value = currentValue;
+
+                // Atualiza o preço total do item (ex: R$ 26,90 * 2 = R$ 53,80)
+                const cartItem = this.closest('.cart-item');
+                const price = parseFloat(cartItem.dataset.price);
+                const itemTotalElement = cartItem.querySelector('.item-total-price');
+                itemTotalElement.textContent = formatCurrency(currentValue * price);
+
+                // Recalcula o resumo total do pedido
+                updateCartSummary();
+            });
+        });
+
+        // --- Ouvinte para Botões de Remover (Lixeira) ---
+        document.querySelectorAll('.remove-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // Encontra o item pai que será removido
+                const cartItem = this.closest('.cart-item');
+                
+                // Mostra o pop-up
+                showToast('Item removido');
+
+                // Adiciona a classe CSS para a animação de "fade-out"
+                cartItem.classList.add('removing');
+
+                // Espera a animação (300ms) terminar antes de remover
+                // o item do HTML e recalcular o total
+                setTimeout(() => {
+                    cartItem.remove();
+                    updateCartSummary();
+                }, 300); // 300ms
+            });
+        });
+    });
+</script>
+{% endblock %}

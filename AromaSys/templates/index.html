@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <h2>Beauty November</h2>
+    
+    <div class="product-grid">
+    
+        {% for product in products %}
+        <div class="product-card">
+            
+            {% if product.tag %}
+            <span class="product-tag">{{ product.tag }}</span>
+            {% endif %}
+            
+            <div class="product-image-container">
+                <img src="{{ product.image_url }}" alt="{{ product.name }}">
+            </div>
+            
+            <div class="product-info">
+                <h3>{{ product.name }}</h3>
+                <p>{{ product.description }}</p>
+                
+                <div class="product-price">
+                    {% if product.old_price %}
+                    <span class="old-price">R$ {{ "%.2f"|format(product.old_price) }}</span>
+                    {% endif %}
+                    <span class="current-price">R$ {{ "%.2f"|format(product.price) }}</span>
+                    <span class="installments">{{ product.installments }}</span>
+                </div>
+            </div>
+            
+            <button class="add-to-cart-button">
+                <i class="fas fa-cart-plus"></i>
+            </button>
+        </div>
+        {% endfor %}
+        
+    </div>
+
+<script>
+    // Função para mostrar a notificação (o "toast")
+    function showToast(message) {
+        // 1. Encontra o container que criamos no layout.html
+        const container = document.getElementById('toast-container');
+        
+        // 2. Cria o novo elemento HTML para o toast
+        const toast = document.createElement('div');
+        toast.className = 'toast'; // Adiciona a classe CSS
+        toast.textContent = message; // Define o texto (ex: "Egeo foi adicionado")
+        
+        // 3. Adiciona o toast ao container
+        container.appendChild(toast);
+
+        // 4. Força o navegador a aplicar o CSS
+        // (necessário para a animação de entrada funcionar)
+        requestAnimationFrame(() => {
+            toast.classList.add('show');
+        });
+        
+        // 5. Remove o toast após 3 segundos
+        setTimeout(() => {
+            toast.classList.remove('show'); // Inicia a animação de "fade-out"
+            
+            // 6. Espera a animação de fade-out terminar (0.5s) para remover
+            // o elemento do HTML
+            setTimeout(() => {
+                if (container.contains(toast)) {
+                    container.removeChild(toast);
+                }
+            }, 500); // 500ms = 0.5s (mesmo tempo da transição no CSS)
+        }, 3000); // 3000ms = 3 segundos
+    }
+
+    // Espera o documento HTML estar completamente carregado
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // Encontra TODOS os botões de "adicionar ao carrinho"
+        const addButtons = document.querySelectorAll('.add-to-cart-button');
+
+        // Adiciona um "ouvinte" de clique para cada botão
+        addButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                
+                // 1. Encontra o "card" pai do botão que foi clicado
+                const card = event.target.closest('.product-card');
+                
+                // 2. Dentro desse card, encontra o 'h3' que tem o nome do produto
+                const productName = card.querySelector('.product-info h3').textContent;
+                
+                // 3. Chama nossa função de toast com a mensagem!
+                showToast(productName + ' foi adicionado à sacola!');
+                
+                // (No futuro, é aqui que você faria a chamada ao backend)
+                // ex: fetch('/carrinho/add/' + productId, { method: 'POST' });
+            });
+        });
+    });
+</script>
+
+{% endblock %}

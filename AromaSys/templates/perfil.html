@@ -1,0 +1,178 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="profile-page-container">
+    
+    <nav class="profile-nav">
+        <div class="profile-user-info">
+            <div class="profile-placeholder-icon"><i class="fas fa-user"></i></div>
+            <h4>(Nome do Usuário)</h4>
+            <p>(usuario@email.com)</p>
+        </div>
+
+        <ul id="profile-menu">
+            <li class="active" data-target="meus-pedidos-pane">
+                <a href="#">
+                    <i class="fas fa-box-open"></i>
+                    <span>Meus Pedidos</span>
+                </a>
+            </li>
+            <li data-target="meus-dados-pane">
+                <a href="#">
+                    <i class="fas fa-user-edit"></i>
+                    <span>Meus Dados</span>
+                </a>
+            </li>
+            <li data-target="enderecos-pane">
+                <a href="#">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Endereços</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('home') }}">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Sair</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    
+    <div class="profile-content">
+        
+        <div id="meus-pedidos-pane" class="profile-pane active">
+            <h2>Meus Pedidos</h2>
+            <div class="order-list">
+                {% for order in orders %}
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-info-group">
+                            <span>Número do Pedido</span>
+                            <strong>{{ order.id }}</strong>
+                        </div>
+                        <div class="order-info-group">
+                            <span>Data</span>
+                            <strong>{{ order.date }}</strong>
+                        </div>
+                        <div class="order-info-group">
+                            <span>Total</span>
+                            <strong>R$ {{ "%.2f"|format(order.total) }}</strong>
+                        </div>
+                    </div>
+                    <div class="order-body">
+                        {% if order.status == 'Entregue' %}
+                            <span class="order-status status-delivered">{{ order.status }}</span>
+                        {% elif order.status == 'Cancelado' %}
+                            <span class="order-status status-cancelled">{{ order.status }}</span>
+                        {% else %}
+                            <span class="order-status">{{ order.status }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="order-items-preview">
+                        {% for item in order['items'] %}
+                        <img src="{{ item.image_url }}" alt="{{ item.name }}" title="{{ item.name }}">
+                        {% endfor %}
+                    </div>
+                    <div class="order-footer">
+                        <a href="#" class="btn-secondary">Ver Detalhes do Pedido</a>
+                    </div>
+                </div>
+                {% endfor %}
+
+                {% if not orders %}
+                <div class="checkout-box text-center">
+                    <p>Você ainda não fez nenhum pedido.</p>
+                    <a href="{{ url_for('home') }}" class="btn-primary">Ver Produtos</a>
+                </div>
+                {% endif %}
+            </div>
+        </div> <div id="meus-dados-pane" class="profile-pane">
+            <h2>Meus Dados</h2>
+            <div class="checkout-box">
+                <form class="card-form">
+                    <div class="form-group">
+                        <label for="nome-completo">Nome Completo</label>
+                        <input type="text" id="nome-completo" value="(Nome do Usuário)">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" value="(usuario@email.com)" disabled>
+                        <small>O email não pode ser alterado.</small>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="cpf">CPF</label>
+                            <input type="text" id="cpf" value="123.456.789-00" disabled>
+                            <small>O CPF não pode ser alterado.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefone">Telefone / Celular</label>
+                            <input type="text" id="telefone" value="(83) 91234-5678">
+                        </div>
+                    </div>
+                    <hr class="form-divider">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="senha-atual">Alterar Senha (opcional)</label>
+                            <input type="password" id="senha-atual" placeholder="Digite sua senha atual">
+                        </div>
+                        <div class="form-group">
+                            <label for="senha-nova">Nova Senha</label>
+                            <input type="password" id="senha-nova" placeholder="Digite a nova senha">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary" style="align-self: flex-start; margin-top: 10px;">
+                        Salvar Alterações
+                    </button>
+                </form>
+            </div>
+        </div> <div id="enderecos-pane" class="profile-pane">
+            <h2>Meus Endereços</h2>
+            
+            <div class="address-list">
+                <div class="address-card checkout-box">
+                    <div class="address-card-header">
+                        <strong><i class="fas fa-home"></i> Casa</strong>
+                        <span class="address-tag-default">Padrão</span>
+                    </div>
+                    <div class="address-details">
+                        <p>Rua Exemplo dos Perfumes, 123</p>
+                        <p>Centro, Cidade Fictícia - UF, 00000-000</p>
+                    </div>
+                    <div class="address-card-actions">
+                        <a href="#" class="btn-secondary">Editar</a>
+                        <a href="#" class="btn-secondary btn-danger-outline">Excluir</a>
+                    </div>
+                </div>
+
+                <button class="address-add-new">
+                    <i class="fas fa-plus"></i>
+                    <span>Adicionar Novo Endereço</span>
+                </button>
+            </div>
+
+        </div> </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const menuItems = document.querySelectorAll('#profile-menu li');
+    const panes = document.querySelectorAll('.profile-pane');
+
+    menuItems.forEach(item => {
+        if (item.dataset.target) {
+            item.addEventListener('click', function(e) {
+                e.preventDefault(); 
+                const targetId = this.dataset.target;
+                menuItems.forEach(mi => mi.classList.remove('active'));
+                panes.forEach(pane => pane.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById(targetId).classList.add('active');
+            });
+        }
+    });
+});
+</script>
+
+{% endblock %}

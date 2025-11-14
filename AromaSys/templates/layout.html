@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AromaSys</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header class="header-container">
+        <div class="header-top-bar">
+            Primeira compra no Site tem mais vantagens: escolha a sua!
+        </div>
+
+        <div class="header-main">
+            <a href="{{ url_for('home') }}" class="header-logo">
+                AromaSys
+            </a>
+
+            <div class="search-bar">
+                <input type="text" placeholder="Novos itens e mais descontos" />
+                <button class="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+
+            <nav class="header-nav">
+                <a href="{{ url_for('login') }}" class="nav-link">
+                    <i class="fas fa-user"></i>
+                    <div>
+                        <span>Olá! Entre ou</span>
+                        <strong>Minha Conta</strong>
+                    </div>
+                </a>
+                <a href="{{ url_for('carrinho') }}" class="nav-link">
+                    <i class="fas fa-shopping-bag"></i>
+                    <strong>Sua Sacola</strong>
+                </a>
+            </nav>
+        </div>
+
+        <div class="header-categories">
+            <a href="#">Perfumaria</a>
+            <a href="#">Corpo e Banho</a>
+            <a href="#">Make</a>
+            <a href="#">Cabelos</a>
+            <a href="#">Skincare</a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <div id="toast-container"></div>
+
+</body>
+</html>

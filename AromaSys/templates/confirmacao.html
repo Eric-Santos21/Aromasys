@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="checkout-stepper">
+    <div class="step active done"> <div class="step-number">1</div>
+        <div class="step-label">Sacola</div>
+    </div>
+    <div class="step-line active"></div>
+    <div class="step active"> <div class="step-number">2</div>
+        <div class="step-label">Entrega</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step"> <div class="step-number">3</div>
+        <div class="step-label">Pagamento</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step"> <div class="step-number">4</div>
+        <div class="step-label">Sucesso</div>
+    </div>
+</div>
+
+<div class="checkout-page-container">
+    
+    <div class="checkout-details">
+        <h2>Confirmação de Pedido</h2>
+        <div class="checkout-box">
+            <h3><i class="fas fa-map-marker-alt"></i> 1. Endereço de Entrega</h3>
+            <div class="address-details">
+                <strong>(Nome do Usuário)</strong>
+                <p>Rua Exemplo dos Perfumes, 123</p>
+                <p>Centro, Cidade Fictícia - UF</p>
+                <p>CEP: 00000-000</p>
+            </div>
+            <a href="#" class="btn-secondary">Trocar Endereço</a>
+        </div>
+
+        <div class="checkout-box">
+            <h3><i class="fas fa-truck"></i> 2. Opções de Entrega</h3>
+            <div class="delivery-options">
+                <label for="entrega" class="delivery-option active">
+                    <input type="radio" name="delivery_type" id="entrega" value="entrega" checked>
+                    <div class="delivery-option-info">
+                        <strong>Entrega Padrão</strong>
+                        <span>Receba em até 5 dias úteis</span>
+                    </div>
+                    <span class="delivery-option-price">R$ 15,00</span>
+                </label>
+                <label for="retirada" class="delivery-option">
+                    <input type="radio" name="delivery_type" id="retirada" value="retirada">
+                    <div class="delivery-option-info">
+                        <strong>Retirar na Loja</strong>
+                        <span>Disponível em 2 horas</span>
+                    </div>
+                    <span class="delivery-option-price">Grátis</span>
+                </label>
+            </div>
+        </div>
+        
+        <a href="{{ url_for('pagamento') }}" class="btn-checkout btn-full-width">
+            Ir para o Pagamento
+        </a>
+        <a href="{{ url_for('carrinho') }}" class="link-voltar" style="text-align: center; display: block; margin-top: 15px;">
+            <i class="fas fa-arrow-left"></i> Voltar para a Sacola
+        </a>
+    </div>
+    
+    <div class="cart-summary">
+        <h3>Resumo do Pedido</h3>
+        <div class="summary-row">
+            <span>Subtotal (2 itens)</span>
+            <span>R$ 88,80</span>
+        </div>
+        <div class="summary-row">
+            <span>Frete</span>
+            <span>R$ 15,00</span>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-total">
+            <span>Total</span>
+            <strong>R$ 103,80</strong>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showToast(message){const container=document.getElementById('toast-container');const toast=document.createElement('div');toast.className='toast';toast.textContent=message;container.appendChild(toast);requestAnimationFrame(()=>{toast.classList.add('show');});setTimeout(()=>{toast.classList.remove('show');setTimeout(()=>{if(container.contains(toast)){container.removeChild(toast);}},500);},3000);}
+    document.addEventListener('DOMContentLoaded',function(){const radioButtons=document.querySelectorAll('.delivery-option input[type="radio"]');radioButtons.forEach(radio=>{radio.addEventListener('change',function(){document.querySelectorAll('.delivery-option').forEach(opt=>opt.classList.remove('active'));this.closest('.delivery-option').classList.add('active');showToast('Opção de entrega alterada com sucesso');});});});
+</script>
+
+{% endblock %}

@@ -1,0 +1,1358 @@
+/* ======================== */
+/* 1. RESET E ESTILOS GERAIS */
+/* ======================== */
+:root {
+    --color-primary-green: #007f5f;
+    --color-dark-text: #212121;
+    --color-light-text: #5f5f5f;
+    --color-background-dark: #222;
+    --color-background-light: #fff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.main-content {
+    padding-top: 170px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 40px;
+}
+
+/* ======================== */
+/* 2. HEADER (DO LAYOUT.HTML) */
+/* ======================== */
+.header-container {
+    width: 100%;
+    background-color: var(--color-background-dark);
+    color: var(--color-background-light);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.header-top-bar {
+    background-color: var(--color-primary-green);
+    text-align: center;
+    padding: 8px 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.header-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 30px;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.header-logo {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-primary-green);
+    text-transform: uppercase;
+    letter-spacing: -1px;
+}
+
+.search-bar {
+    flex-grow: 1;
+    margin: 0 40px;
+    display: flex;
+    background-color: var(--color-background-light);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.search-bar input {
+    flex-grow: 1;
+    border: none;
+    padding: 12px 15px;
+    font-size: 0.9rem;
+    color: var(--color-dark-text);
+}
+
+.search-bar input:focus {
+    outline: none;
+}
+
+.search-button {
+    background-color: var(--color-primary-green);
+    border: none;
+    color: var(--color-background-light);
+    padding: 0 15px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.header-nav {
+    display: flex;
+    gap: 25px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-background-light);
+    font-size: 0.9rem;
+}
+
+.nav-link svg,
+.nav-link i {
+    font-size: 1.5rem;
+}
+
+.nav-link div {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-link span {
+    font-size: 0.8rem;
+    color: #ccc;
+}
+
+.nav-link strong {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.header-categories {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    background-color: #333;
+    padding: 10px 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* ======================== */
+/* 3. HOME (DO INDEX.HTML) */
+/* ======================== */
+.home-container h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: var(--color-dark-text);
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--color-primary-green);
+    display: inline-block;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+/* ======================== */
+/* 4. PRODUCT CARD */
+/* ======================== */
+.product-card {
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    transition: box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.product-tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: var(--color-primary-green);
+    color: #fff;
+    padding: 3px 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border-radius: 4px;
+}
+
+.product-image-container {
+    width: 100%;
+    padding-top: 100%;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.product-image-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.product-info h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-dark-text);
+    margin-bottom: 5px;
+}
+
+.product-info p {
+    font-size: 0.9rem;
+    color: var(--color-light-text);
+    margin-bottom: 15px;
+}
+
+.product-price {
+    display: flex;
+    flex-direction: column;
+}
+
+.old-price {
+    font-size: 0.8rem;
+    color: var(--color-light-text);
+    text-decoration: line-through;
+}
+
+.current-price {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--color-primary-green);
+}
+
+.installments {
+    font-size: 0.8rem;
+    color: var(--color-light-text);
+}
+
+.add-to-cart-button {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background-color: var(--color-primary-green);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-to-cart-button:hover {
+    background-color: #005f4a;
+}
+
+/* ======================== */
+/* 5. TELA DE LOGIN (DO LOGIN.HTML) */
+/* ======================== */
+.login-page-body {
+    background-color: #f0f2f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.login-container {
+    background-color: var(--color-background-light);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+}
+
+.login-container h1 {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.login-container .header-logo {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-primary-green);
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.login-container .header-logo:hover {
+    text-decoration: none;
+}
+
+.login-container p {
+    font-size: 1rem;
+    color: var(--color-light-text);
+    margin-bottom: 30px;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.login-container label {
+    text-align: left;
+    font-weight: 500;
+    color: var(--color-dark-text);
+}
+
+.login-container input {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 100%;
+}
+
+.login-container button[type="submit"] {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--color-primary-green);
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.login-container button[type="submit"]:hover {
+    background-color: #005f4a;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: var(--color-light-text);
+    margin: 25px 0 20px 0;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #ddd;
+}
+
+.divider:not(:empty)::before {
+    margin-right: .5em;
+}
+
+.divider:not(:empty)::after {
+    margin-left: .5em;
+}
+
+.btn-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    color: var(--color-dark-text);
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: box-shadow 0.3s ease;
+}
+
+.btn-google:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+}
+
+.google-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+}
+
+.link-voltar {
+    display: inline-block;
+    margin-top: 25px;
+    color: var(--color-primary-green);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.link-voltar:hover {
+    text-decoration: underline;
+}
+
+.login-container a.btn-google {
+    margin-top: 0;
+    text-decoration: none;
+}
+
+.login-container a.btn-google:hover {
+    text-decoration: none;
+}
+
+/* ======================== */
+/* 6. TELA DA SACOLA (CARRINHO.HTML) */
+/* ======================== */
+.cart-page-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.cart-items-list {
+    flex: 3;
+    min-width: 300px;
+}
+
+.cart-items-list h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: var(--color-dark-text);
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.cart-item-image img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 4px;
+    border: 1px solid #eee;
+}
+
+.cart-item-info {
+    flex-grow: 1;
+    min-width: 150px;
+}
+
+.cart-item-info h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-dark-text);
+}
+
+.cart-item-info p {
+    font-size: 0.9rem;
+    color: var(--color-light-text);
+}
+
+.cart-item-quantity {
+    display: flex;
+    align-items: center;
+}
+
+.cart-item-quantity input {
+    width: 40px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-left: none;
+    border-right: none;
+    padding: 6px 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+}
+
+.quantity-btn {
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.cart-item-price {
+    text-align: right;
+    min-width: 100px;
+}
+
+.cart-item-price span {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-dark-text);
+    display: block;
+}
+
+.cart-item-price small {
+    font-size: 0.8rem;
+    color: var(--color-light-text);
+}
+
+.cart-item-remove .remove-btn {
+    background: none;
+    border: none;
+    color: var(--color-light-text);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.cart-item-remove .remove-btn:hover {
+    color: #e03131;
+}
+
+.cart-summary {
+    flex: 1;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    min-width: 280px;
+    position: sticky;
+    top: 190px;
+}
+
+.cart-summary h3 {
+    font-size: 1.5rem;
+    color: var(--color-dark-text);
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    color: var(--color-light-text);
+    margin-bottom: 15px;
+}
+
+.summary-divider {
+    border-bottom: 1px dashed #ddd;
+    margin: 15px 0;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--color-dark-text);
+    margin-bottom: 25px;
+}
+
+.btn-checkout {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: var(--color-primary-green);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-checkout:hover {
+    background-color: #005f4a;
+    color: #fff;
+}
+
+.cart-empty {
+    text-align: center;
+    background: #fff;
+    padding: 40px;
+    border-radius: 8px;
+}
+
+.cart-empty h3 {
+    font-size: 1.5rem;
+    color: var(--color-dark-text);
+    margin-bottom: 10px;
+}
+
+.cart-empty p {
+    color: var(--color-light-text);
+    margin-bottom: 25px;
+}
+
+.btn-primary {
+    background-color: var(--color-primary-green);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #005f4a;
+    color: #fff;
+}
+
+/* ======================== */
+/* 7. AJUSTES NO CARRINHO (JAVASCRIPT) */
+/* ======================== */
+.quantity-btn {
+    cursor: pointer;
+    user-select: none;
+}
+
+.cart-item-quantity input.quantity-input {
+    background-color: #fff;
+}
+
+/* ======================== */
+/* 8. TOAST NOTIFICATIONS (POP-UP) */
+/* ======================== */
+#toast-container {
+    position: fixed;
+    top: 190px;
+    right: 20px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    background-color: var(--color-primary-green);
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    font-weight: 500;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* ======================== */
+/* 9. ANIMAÇÃO DE REMOVER ITEM (CARRINHO) */
+/* ======================== */
+.cart-item.removing {
+    transition: opacity 0.3s ease, transform 0.3s ease, height 0.3s ease, padding 0.3s ease, margin 0.3s ease;
+    opacity: 0;
+    transform: scale(0.95);
+    height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    border: none;
+    overflow: hidden;
+}
+
+/* ======================== */
+/* 10. TELA DE CHECKOUT (CONFIRMACAO.HTML) */
+/* ======================== */
+.checkout-page-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.checkout-details {
+    flex: 3;
+    min-width: 300px;
+}
+
+.checkout-details h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: var(--color-dark-text);
+}
+
+.checkout-box {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.checkout-box h3 {
+    font-size: 1.5rem;
+    color: var(--color-dark-text);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.address-details {
+    line-height: 1.6;
+    color: var(--color-light-text);
+    margin-bottom: 20px;
+}
+
+.address-details strong {
+    color: var(--color-dark-text);
+    font-size: 1.1rem;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.btn-secondary {
+    background-color: #f0f0f0;
+    color: var(--color-dark-text);
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #e0e0e0;
+}
+
+.delivery-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.delivery-option {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.delivery-option:hover {
+    border-color: #aaa;
+}
+
+.delivery-option.active {
+    border-color: var(--color-primary-green);
+    box-shadow: 0 0 5px rgba(0, 127, 95, 0.3);
+}
+
+.delivery-option input[type="radio"] {
+    display: none;
+}
+
+.delivery-option-info {
+    flex-grow: 1;
+}
+
+.delivery-option-info strong {
+    font-size: 1.1rem;
+    color: var(--color-dark-text);
+    display: block;
+}
+
+.delivery-option-info span {
+    font-size: 0.9rem;
+    color: var(--color-light-text);
+}
+
+.delivery-option-price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-dark-text);
+}
+
+.btn-full-width {
+    width: 100%;
+}
+
+/* ======================== */
+/* 11. TELA DE PAGAMENTO (PAGAMENTO.HTML) */
+/* ======================== */
+.payment-options {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+}
+
+.payment-option {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 15px 10px;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    color: var(--color-light-text);
+    font-weight: 500;
+    transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+.payment-option i {
+    font-size: 1.5rem;
+}
+
+.payment-option.active {
+    color: var(--color-primary-green);
+    border-bottom-color: var(--color-primary-green);
+}
+
+.payment-details-pane {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.payment-details-pane.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.payment-details-pane h4 {
+    font-size: 1.2rem;
+    color: var(--color-dark-text);
+    margin-bottom: 15px;
+}
+
+.payment-details-pane p {
+    color: var(--color-light-text);
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.card-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: var(--color-dark-text);
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 100%;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--color-primary-green);
+    box-shadow: 0 0 5px rgba(0, 127, 95, 0.3);
+}
+
+.form-group input:disabled {
+    background-color: #f4f4f4;
+    color: var(--color-light-text);
+    cursor: not-allowed;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+hr.form-divider {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 20px 0;
+}
+
+.form-group small {
+    font-size: 0.85rem;
+    color: var(--color-light-text);
+    margin-top: 5px;
+}
+
+
+/* ======================== */
+/* 12. BARRA DE PROGRESSO (STEPPER) */
+/* ======================== */
+.checkout-stepper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0 auto 30px auto;
+    max-width: 800px;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--color-light-text);
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: color 0.4s ease;
+}
+
+.step-number {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 2px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 8px;
+    transition: background-color 0.4s ease, border-color 0.4s ease;
+}
+
+.step-line {
+    flex-grow: 1;
+    height: 3px;
+    background-color: #ddd;
+    margin: 0 10px;
+    transform: translateY(-15px);
+    transition: background-color 0.4s ease;
+}
+
+.step.active {
+    color: var(--color-dark-text);
+}
+
+.step.active .step-number {
+    background-color: var(--color-primary-green);
+    color: #fff;
+    border-color: var(--color-primary-green);
+}
+
+.step.done .step-number {
+    background-color: var(--color-primary-green);
+    color: #fff;
+    border-color: var(--color-primary-green);
+}
+
+.step-line.active {
+    background-color: var(--color-primary-green);
+}
+
+/* ======================== */
+/* 13. TELA DE SUCESSO (SUCESSO.HTML) */
+/* ======================== */
+.success-page-container {
+    max-width: 700px;
+    margin: 40px auto 0 auto;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.success-icon {
+    font-size: 5rem;
+    color: var(--color-primary-green);
+    margin-bottom: 20px;
+}
+
+.success-page-container h2 {
+    font-size: 2rem;
+    color: var(--color-dark-text);
+    margin-bottom: 10px;
+}
+
+.success-page-container p {
+    font-size: 1.1rem;
+    color: var(--color-light-text);
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.order-number {
+    font-size: 1.2rem;
+    color: var(--color-dark-text);
+    margin-bottom: 30px;
+}
+
+.success-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+/* ======================== */
+/* 14. TELA DE PERFIL (PERFIL.HTML) */
+/* ======================== */
+
+.profile-page-container {
+    display: flex;
+    flex-wrap: wrap; /* Para telas menores */
+    gap: 30px;
+    align-items: flex-start;
+}
+
+/* Menu Lateral */
+.profile-nav {
+    flex: 1;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    min-width: 250px;
+    position: sticky;
+    top: 190px; /* Gruda abaixo do header */
+}
+
+.profile-user-info {
+    text-align: center;
+    padding: 25px;
+    border-bottom: 1px solid #eee;
+}
+
+.profile-placeholder-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px auto;
+    font-size: 2.5rem;
+    color: var(--color-light-text);
+}
+
+.profile-user-info h4 {
+    font-size: 1.2rem;
+    color: var(--color-dark-text);
+    font-weight: 700;
+}
+
+.profile-user-info p {
+    font-size: 0.9rem;
+    color: var(--color-light-text);
+}
+
+.profile-nav ul {
+    list-style: none;
+    padding: 15px;
+}
+
+.profile-nav li a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: 500;
+    color: var(--color-light-text);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.profile-nav li a i {
+    font-size: 1.2rem;
+    width: 20px; /* Alinha os ícones */
+    text-align: center;
+}
+
+.profile-nav li a:hover {
+    background-color: #f9f9f9;
+    color: var(--color-dark-text);
+}
+
+.profile-nav li.active a {
+    background-color: var(--color-primary-green);
+    color: #fff;
+}
+
+/* Conteúdo Principal (Pedidos) */
+.profile-content {
+    flex: 3;
+    min-width: 300px;
+}
+
+.profile-content h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: var(--color-dark-text);
+}
+
+/* Controle dos Painéis (Abas) */
+.profile-pane {
+    display: none; /* Esconde todos os painéis */
+    animation: fadeIn 0.5s ease; /* Animação suave */
+}
+
+.profile-pane.active {
+    display: block; /* Mostra só o painel ativo */
+}
+
+
+/* Lista de Pedidos */
+.order-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.order-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    overflow: hidden; /* Para o rodapé ficar contido */
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    background-color: #fdfdfd;
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.order-info-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-info-group span {
+    font-size: 0.8rem;
+    color: var(--color-light-text);
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.order-info-group strong {
+    font-size: 1rem;
+    color: var(--color-dark-text);
+    font-weight: 700;
+}
+
+.order-body {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-status {
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+}
+
+.order-status.status-delivered {
+    background-color: #e6f7f3; /* Verde claro */
+    color: var(--color-primary-green);
+}
+
+.order-status.status-cancelled {
+    background-color: #fbe9e9; /* Vermelho claro */
+    color: #e03131;
+}
+
+.order-items-preview {
+    padding: 0 20px 20px 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.order-items-preview img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    border-radius: 4px;
+    border: 1px solid #eee;
+}
+
+.order-footer {
+    background-color: #fdfdfd;
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+    text-align: right;
+}
+
+/* ======================== */
+/* (NOVO) 15. ABA DE ENDEREÇOS (PERFIL.HTML) */
+/* ======================== */
+
+.address-list {
+    display: grid;
+    /* Cria colunas, mas no máximo 2 */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.address-card {
+    /* Reutiliza o estilo do 'checkout-box' */
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0; /* Remove a margem do checkout-box */
+}
+
+.address-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 15px;
+}
+
+.address-card-header strong {
+    font-size: 1.1rem;
+    color: var(--color-dark-text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.address-tag-default {
+    background-color: #f0f0f0;
+    color: var(--color-light-text);
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.address-card .address-details {
+    flex-grow: 1; /* Empurra as ações para baixo */
+    margin-bottom: 0;
+}
+
+.address-card-actions {
+    display: flex;
+    gap: 10px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    margin-top: 15px;
+}
+
+/* Botão de "Excluir" com borda vermelha */
+.btn-danger-outline {
+    background-color: transparent;
+    color: #e03131;
+    border: 1px solid #fbe9e9;
+}
+
+.btn-danger-outline:hover {
+    background-color: #fbe9e9;
+    color: #e03131;
+}
+
+/* Botão de Adicionar Endereço */
+.address-add-new {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 220px; /* Altura similar ao card */
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    background-color: #fdfdfd;
+    color: var(--color-light-text);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.address-add-new i {
+    font-size: 2rem;
+}
+
+.address-add-new:hover {
+    background-color: #f9f9f9;
+    border-color: #ccc;
+    color: var(--color-dark-text);
+}
+
+/* ======================== */
+/* (NOVO) 16. TELA DE CADASTRO (CADASTRAR.HTML) */
+/* ======================== */
+
+/* Caixa de cadastro (um pouco mais larga que a de login) */
+.register-container {
+    max-width: 600px; 
+}
+
+/* Ajustes no formulário de cadastro */
+.register-form {
+    text-align: left; /* Alinha labels à esquerda */
+    gap: 20px; /* Aumenta o espaço */
+}
+
+/* Botão de Criar Conta */
+.register-form .btn-primary {
+    width: 100%;
+    padding: 14px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-top: 10px;
+}

@@ -1,0 +1,208 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<!-- BARRA DE PROGRESSO (Passo 3 ativo) -->
+<div class="checkout-stepper">
+    <div class="step active done"> <!-- 1. Sacola -->
+        <div class="step-number">1</div>
+        <div class="step-label">Sacola</div>
+    </div>
+    <div class="step-line active"></div>
+    <div class="step active done"> <!-- 2. Entrega -->
+        <div class="step-number">2</div>
+        <div class="step-label">Entrega</div>
+    </div>
+    <div class="step-line active"></div>
+    <div class="step active"> <!-- 3. Pagamento -->
+        <div class="step-number">3</div>
+        <div class="step-label">Pagamento</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step"> <!-- 4. Sucesso -->
+        <div class="step-number">4</div>
+        <div class="step-label">Sucesso</div>
+    </div>
+</div>
+
+<div class="checkout-page-container">
+    
+    <!-- Coluna da Esquerda: Opções de Pagamento -->
+    <div class="checkout-details">
+        <h2>Pagamento</h2>
+        <!-- Bloco 1: Opções de Pagamento -->
+        <div class="checkout-box">
+            <h3><i class="fas fa-wallet"></i> 3. Escolha como pagar</h3>
+            
+            <div class="payment-options">
+                <!-- Opção 1: PIX -->
+                <div class="payment-option" data-target="pix-details">
+                    <i class="fas fa-qrcode"></i>
+                    <span>PIX</span>
+                </div>
+                <!-- Opção 2: Cartão (Selecionado por padrão) -->
+                <div class="payment-option active" data-target="card-details">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Cartão de Crédito</span>
+                </div>
+                
+                <!-- === MUDANÇA AQUI === -->
+                <!-- Opção 3: Boleto (Substituindo Dinheiro) -->
+                <div class="payment-option" data-target="boleto-details">
+                    <i class="fas fa-barcode"></i> <!-- Ícone de código de barras -->
+                    <span>Boleto</span>
+                </div>
+                <!-- === FIM DA MUDANÇA === -->
+            </div>
+
+            <!-- Detalhes do Pagamento -->
+            <div id="payment-details-content">
+                
+                <!-- Detalhes PIX (Sem alteração) -->
+                <div id="pix-details" class="payment-details-pane">
+                    <h4>Pague com PIX</h4>
+                    <p>Um QR Code será gerado ao finalizar o pedido. O pagamento deve ser feito em até 15 minutos.</p>
+                </div>
+
+                <!-- Detalhes Cartão (Sem alteração) -->
+                <div id="card-details" class="payment-details-pane active">
+                    <h4>Preencha os dados do cartão</h4>
+                    <form class="card-form">
+                        <div class="form-group">
+                            <label for="card-number">Número do Cartão</label>
+                            <input type="text" id="card-number" placeholder="0000 0000 0000 0000" maxlength="19">
+                        </div>
+                        <div class="form-group">
+                            <label for="card-name">Nome no Cartão</label>
+                            <input type="text" id="card-name" placeholder="Como está no cartão">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group small">
+                                <label for="card-expiry">Validade (MM/AA)</label>
+                                <input type="text" id="card-expiry" placeholder="MM/AA" maxlength="5">
+                            </div>
+                            <div class="form-group small">
+                                <label for="card-cvv">CVV</label>
+                                <input type="text" id="card-cvv" placeholder="123" maxlength="4">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- === MUDANÇA AQUI === -->
+                <!-- Detalhes Boleto (Substituindo Dinheiro) -->
+                <div id="boleto-details" class="payment-details-pane">
+                    <h4>Pagamento com Boleto</h4>
+                    <p>Ao finalizar o pedido, um boleto bancário será gerado. Você poderá pagá-lo online ou em qualquer agência bancária/lotérica.</p>
+                    <p style="font-weight: 500; color: var(--color-dark-text);"><i class="fas fa-info-circle"></i> O prazo de compensação é de até 2 dias úteis.</p>
+                </div>
+                <!-- === FIM DA MUDANÇA === -->
+            </div>
+        </div>
+        
+        <a href="{{ url_for('sucesso') }}" class="btn-checkout btn-full-width">
+            Finalizar Pedido
+        </a>
+        <a href="{{ url_for('confirmacao') }}" class="link-voltar" style="text-align: center; display: block; margin-top: 15px;">
+            <i class="fas fa-arrow-left"></i> Voltar para a Entrega
+        </a>
+    </div>
+    
+    <!-- Coluna da Direita: Resumo do Pedido -->
+    <div class="cart-summary">
+        <h3>Resumo do Pedido</h3>
+        <div class="summary-row">
+            <span>Subtotal (2 itens)</span>
+            <span>R$ 88,80</span>
+        </div>
+        <div class="summary-row">
+            <span>Frete</span>
+            <span>R$ 15,00</span>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-total">
+            <span>Total</span>
+            <strong>R$ 103,80</strong>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPT (Corrigido para incluir validação de Nome e Troco) -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // --- Lógica das Abas de Pagamento ---
+    const options = document.querySelectorAll('.payment-option');
+    const panes = document.querySelectorAll('.payment-details-pane');
+
+    options.forEach(option => {
+        option.addEventListener('click', function() {
+            options.forEach(opt => opt.classList.remove('active'));
+            panes.forEach(pane => pane.classList.remove('active'));
+            this.classList.add('active');
+            const targetId = this.dataset.target;
+            document.getElementById(targetId).classList.add('active');
+        });
+    });
+
+    // --- Lógica de Máscaras e Filtros ---
+
+    // Função que SÓ permite números
+    function restrictToNumbers(event) {
+        if (event.isComposing || event.keyCode === 229) return;
+        if ([46, 8, 9, 27, 13, 110, 190, 188, 190].includes(event.keyCode) || 
+            (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
+            (event.keyCode >= 35 && event.keyCode <= 40)) {
+            return; 
+        }
+        if ((event.shiftKey || (event.keyCode < 48 || event.keyCode > 57)) && (event.keyCode < 96 || event.keyCode > 105)) {
+            event.preventDefault();
+        }
+    }
+
+    // Função que SÓ permite letras e espaço
+    function restrictToLetters(event) {
+        if (event.isComposing || event.keyCode === 229) return;
+        if ([46, 8, 9, 27, 13, 32].includes(event.keyCode) || 
+            (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
+            (event.keyCode >= 35 && event.keyCode <= 40)) {
+            return; 
+        }
+        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105)) {
+            event.preventDefault();
+        }
+    }
+
+    // Aplicando os filtros aos campos:
+    
+    const cardNumberInput = document.getElementById('card-number');
+    if (cardNumberInput) {
+        cardNumberInput.addEventListener('keydown', restrictToNumbers);
+    }
+    
+    const cardCvvInput = document.getElementById('card-cvv');
+    if (cardCvvInput) {
+        cardCvvInput.addEventListener('keydown', restrictToNumbers);
+    }
+
+    const cardExpiryInput = document.getElementById('card-expiry');
+    if (cardExpiryInput) {
+        cardExpiryInput.addEventListener('keydown', restrictToNumbers);
+        cardExpiryInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, ''); 
+            if (value.length > 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            e.target.value = value;
+        });
+    }
+
+    const cardNameInput = document.getElementById('card-name');
+    if (cardNameInput) {
+        cardNameInput.addEventListener('keydown', restrictToLetters);
+    }
+    
+});
+</script>
+
+{% endblock %}

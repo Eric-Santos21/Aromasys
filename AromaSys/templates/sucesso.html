@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="checkout-stepper">
+    <div class="step active done"> <div class="step-number">1</div>
+        <div class="step-label">Sacola</div>
+    </div>
+    <div class="step-line active"></div>
+    <div class="step active done"> <div class="step-number">2</div>
+        <div class="step-label">Entrega</div>
+    </div>
+    <div class="step-line active"></div>
+    <div class="step active done"> <div class="step-number">3</div>
+        <div class="step-label">Pagamento</div>
+    </div>
+    <div class="step-line active"></div>
+    <div class="step active done"> <div class="step-number">4</div>
+        <div class="step-label">Sucesso</div>
+    </div>
+</div>
+
+<div class="success-page-container">
+    <div class="checkout-box text-center">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h2>Pedido Confirmado!</h2>
+        <p>Obrigado pela sua compra!</p>
+        <p class="order-number">O número do seu pedido é: <strong>#123456</strong></p>
+        
+        <div class="success-actions">
+            <a href="{{ url_for('home') }}" class="btn-primary">Continuar Comprando</a>
+            <a href="{{ url_for('perfil') }}" class="btn-secondary">Ver Meus Pedidos</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
