@@ -184,10 +184,10 @@
 
                 if (action === 'increment') {
                     currentValue++;
-                    showToast('Item adicionado');
+                    showToast('Item Adicionado');
                 } else if (action === 'decrement' && currentValue > 1) {
                     currentValue--;
-                    showToast('Item reduzido');
+                    showToast('Item Reduzido');
                 }
 
                 // Atualiza o valor no input
@@ -211,7 +211,7 @@
                 const cartItem = this.closest('.cart-item');
                 
                 // Mostra o pop-up
-                showToast('Item removido');
+                showToast('Item Removido');
 
                 // Adiciona a classe CSS para a animação de "fade-out"
                 cartItem.classList.add('removing');

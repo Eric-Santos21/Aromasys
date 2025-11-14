@@ -2,7 +2,7 @@ from flask import Flask, render_template, url_for, request, redirect, flash
 
 # 1. Configuração do App
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'sua-chave-secreta-aqui' 
+app.config['SECRET_KEY'] = 'sua-chave-secreta-aqui'
 
 # 2. Dados Falsos (Mock)
 mock_products = [
@@ -13,7 +13,7 @@ mock_products = [
     "old_price": 154.90,
     "price": 61.90,
     "installments": "3x R$ 20,63",
-    "image_url": "https://i.imgur.com/gJ5B85m.png", 
+    "image_url": "https://i.imgur.com/gJ5B85m.png",
     "tag": "-60%"
   },
   {
@@ -108,10 +108,10 @@ def carrinho():
     frete = 15.00 if subtotal > 0 else 0
     total = subtotal + frete
     return render_template(
-        "carrinho.html", 
-        cart_items=mock_cart_items, 
-        subtotal=subtotal, 
-        frete=frete, 
+        "carrinho.html",
+        cart_items=mock_cart_items,
+        subtotal=subtotal,
+        frete=frete,
         total=total
     )
 
