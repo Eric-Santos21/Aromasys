@@ -24,7 +24,7 @@ mock_products = [
         "old_price": 159.90,
         "price": 90.90,
         "installments": "4x R$ 22,73",
-        "image_url": "https://i.imgur.com/vHqB5bK.png",
+        "image_url": "imagens/floratta.jpg",
         "tag": "-43%"
     },
     {
@@ -34,7 +34,7 @@ mock_products = [
         "old_price": 54.90,
         "price": 26.90,
         "installments": "a vista",
-        "image_url": "https://i.imgur.com/83S9W4L.png",
+        "image_url": "imagens/match.jpg",
         "tag": "-51%"
     },
     {
@@ -63,7 +63,7 @@ mock_cart_items = [
         "description": "Leave-In Reconstrutor 150ml",
         "price": 26.90,
         "quantity": 2,
-        "image_url": "https://i.imgur.com/83S9W4L.png"
+        "image_url": "imagens/match.jpg"
     }
 ]
 mock_orders = [
@@ -74,7 +74,7 @@ mock_orders = [
         "total": 103.80,
         "items": [
             { "name": "Egeo - Cogu Desodorante Colônia 90ml", "image_url": "imagens/egeo.jpg" }, # CORREÇÃO AQUI
-            { "name": "Match. - Leave-In Reconstrutor 150ml", "image_url": "https://i.imgur.com/83S9W4L.png" }
+            { "name": "Match. - Leave-In Reconstrutor 150ml", "image_url": "imagens/match.jpg" }
         ]
     },
     {
@@ -83,7 +83,7 @@ mock_orders = [
         "status": "Cancelado",
         "total": 90.90,
         "items": [
-            { "name": "Floratta - Blue Desodorante Colônia 75ml", "image_url": "https://i.imgur.com/vHqB5bK.png" }
+            { "name": "Floratta - Blue Desodorante Colônia 75ml", "image_url": "imagens/floratta.jpg" }
         ]
     }
 ]
