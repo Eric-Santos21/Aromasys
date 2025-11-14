@@ -28,7 +28,7 @@
             {% for item in cart_items %}
             <div class="cart-item" data-price="{{ item.price }}"> 
                 <div class="cart-item-image">
-                    <img src="{{ item.image_url }}" alt="{{ item.name }}">
+                    <img src="{{ url_for('static', filename=item.image_url) }}" alt="{{ item.name }}">
                 </div>
                 <div class="cart-item-info">
                     <h3>{{ item.name }}</h3>
@@ -184,10 +184,10 @@
 
                 if (action === 'increment') {
                     currentValue++;
-                    showToast('Item Adicionado');
+                    showToast('Item adicionado');
                 } else if (action === 'decrement' && currentValue > 1) {
                     currentValue--;
-                    showToast('Item Reduzido');
+                    showToast('Item reduzido');
                 }
 
                 // Atualiza o valor no input
@@ -211,7 +211,7 @@
                 const cartItem = this.closest('.cart-item');
                 
                 // Mostra o pop-up
-                showToast('Item Removido');
+                showToast('Item removido');
 
                 // Adiciona a classe CSS para a animação de "fade-out"
                 cartItem.classList.add('removing');

@@ -5,7 +5,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'sua-chave-secreta-aqui'
 
 # 2. Dados Falsos (Mock)
-# 2. Dados Falsos (Mock)
+# O caminho AGORA é "imagens/egeo.jpg" para corresponder à pasta
 mock_products = [
     {
         "id": 1,
@@ -14,7 +14,7 @@ mock_products = [
         "old_price": 154.90,
         "price": 61.90,
         "installments": "3x R$ 20,63",
-        "image_url": "https://i.imgur.com/gJ5B85m.png",
+        "image_url": "imagens/egeo.jpg",
         "tag": "-60%"
     },
     {
@@ -44,7 +44,7 @@ mock_products = [
         "old_price": 87.90,
         "price": 43.90,
         "installments": "2x R$ 21,95",
-        "image_url": "https://i.imgur.com/5rBqFf4.png",
+        "image_url": "imagens/botik.jpg",
         "tag": "-60%"
     },
 ]
@@ -55,7 +55,7 @@ mock_cart_items = [
         "description": "Cogu Desodorante Colônia 90ml",
         "price": 61.90,
         "quantity": 1,
-        "image_url": "https://i.imgur.com/gJ5B85m.png"
+        "image_url": "imagens/egeo.jpg"
     },
     {
         "id": 3,
@@ -73,7 +73,7 @@ mock_orders = [
         "status": "Entregue",
         "total": 103.80,
         "items": [
-            { "name": "Egeo - Cogu Desodorante Colônia 90ml", "image_url": "https://i.imgur.com/gJ5B85m.png" },
+            { "name": "Egeo - Cogu Desodorante Colônia 90ml", "image_url": "imagens/egeo.jpg" }, # CORREÇÃO AQUI
             { "name": "Match. - Leave-In Reconstrutor 150ml", "image_url": "https://i.imgur.com/83S9W4L.png" }
         ]
     },
@@ -135,28 +135,21 @@ def sucesso():
 # 4. Definição das Rotas (PAINEL ADMIN)
 # ===================================
 
-# Rota de Login do Admin
 @app.route("/admin/login")
 def admin_login():
     return render_template("admin_login.html")
 
-# Rota principal do Admin (Dashboard)
 @app.route("/admin")
 @app.route("/admin/dashboard")
 def admin_dashboard():
-    # Passamos os pedidos para o dashboard
     return render_template("admin_dashboard.html", orders=mock_orders)
 
-# Rota de Produtos (Edição da Home)
 @app.route("/admin/produtos")
 def admin_produtos():
-    # Passamos os produtos para a tabela
     return render_template("admin_produtos.html", products=mock_products)
 
-# Rota de Pedidos
 @app.route("/admin/pedidos")
 def admin_pedidos():
-    # Passamos os pedidos para a tabela
     return render_template("admin_pedidos.html", orders=mock_orders)
 
 

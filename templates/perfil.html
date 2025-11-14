@@ -3,7 +3,6 @@
 {% block content %}
 <div class="profile-page-container">
     
-    <!-- Coluna da Esquerda: Menu Lateral -->
     <nav class="profile-nav">
         <div class="profile-user-info">
             <div class="profile-placeholder-icon"><i class="fas fa-user"></i></div>
@@ -11,7 +10,6 @@
             <p>(usuario@email.com)</p>
         </div>
 
-        <!-- Menu de Navegação -->
         <ul id="profile-menu">
             <li class="active" data-target="meus-pedidos-pane">
                 <a href="#">
@@ -40,12 +38,8 @@
         </ul>
     </nav>
     
-    <!-- Coluna da Direita: Conteúdo Principal (PAINÉIS) -->
     <div class="profile-content">
         
-        <!-- ======================= -->
-        <!-- PAINEL 1: MEUS PEDIDOS -->
-        <!-- ======================= -->
         <div id="meus-pedidos-pane" class="profile-pane active">
             <h2>Meus Pedidos</h2>
             <div class="order-list">
@@ -76,7 +70,11 @@
                     </div>
                     <div class="order-items-preview">
                         {% for item in order['items'] %}
-                        <img src="{{ item.image_url }}" alt="{{ item.name }}" title="{{ item.name }}">
+                        {% if 'http' in item.image_url %}
+                            <img src="{{ item.image_url }}" alt="{{ item.name }}" title="{{ item.name }}">
+                        {% else %}
+                            <img src="{{ url_for('static', filename=item.image_url) }}" alt="{{ item.name }}" title="{{ item.name }}">
+                        {% endif %}
                         {% endfor %}
                     </div>
                     <div class="order-footer">
@@ -92,12 +90,7 @@
                 </div>
                 {% endif %}
             </div>
-        </div> <!-- Fim do #meus-pedidos-pane -->
-
-        <!-- ======================= -->
-        <!-- PAINEL 2: MEUS DADOS -->
-        <!-- ======================= -->
-        <div id="meus-dados-pane" class="profile-pane">
+        </div> <div id="meus-dados-pane" class="profile-pane">
             <h2>Meus Dados</h2>
             <div class="checkout-box">
                 <form class="card-form">
@@ -136,15 +129,9 @@
                     </button>
                 </form>
             </div>
-        </div> <!-- Fim do #meus-dados-pane -->
-
-        <!-- ======================= -->
-        <!-- PAINEL 3: ENDEREÇOS -->
-        <!-- ======================= -->
-        <div id="enderecos-pane" class="profile-pane">
+        </div> <div id="enderecos-pane" class="profile-pane">
             <h2>Meus Endereços</h2>
             <div class="address-list">
-                <!-- Endereço 1 (Exemplo) -->
                 <div class="address-card checkout-box">
                     <div class="address-card-header">
                         <strong><i class="fas fa-home"></i> Casa</strong>
@@ -159,20 +146,14 @@
                         <a href="#" class="btn-secondary btn-danger-outline">Excluir</a>
                     </div>
                 </div>
-                <!-- Botão de Adicionar -->
                 <button class="address-add-new">
                     <i class="fas fa-plus"></i>
                     <span>Adicionar Novo Endereço</span>
                 </button>
             </div>
-        </div> <!-- Fim do #enderecos-pane -->
-
-    </div>
+        </div> </div>
 </div>
 
-<!-- ======================= -->
-<!-- (ATUALIZADO) SCRIPT PARA ABAS E MÁSCARAS -->
-<!-- ======================= -->
 <script>
     // --- Função que SÓ permite números ---
     function restrictToNumbers(event) {
@@ -187,7 +168,7 @@
         }
     }
 
-    // --- (NOVO) Função que SÓ permite letras e espaço ---
+    // --- Função que SÓ permite letras e espaço ---
     function restrictToLetters(event) {
         if (event.isComposing || event.keyCode === 229) return;
         if ([46, 8, 9, 27, 13, 32].includes(event.keyCode) || 
@@ -221,7 +202,7 @@
 
         // --- Lógica das Máscaras ---
         
-        // (NOVO) Campo Nome Completo
+        // Nome Completo
         const nomeInput = document.getElementById('nome-completo');
         if (nomeInput) {
             nomeInput.addEventListener('keydown', restrictToLetters);
@@ -264,5 +245,4 @@
         }
     });
 </script>
-
 {% endblock %}

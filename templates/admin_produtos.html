@@ -1,6 +1,5 @@
 {% extends "admin_layout.html" %}
 
-<!-- Define o título que o admin_layout.html vai usar -->
 {% set title = 'Gerenciador de Produtos' %}
 {% set active_page = 'produtos' %}
 
@@ -17,10 +16,11 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Puxamos os produtos do 'mock_products' -->
             {% for product in products %}
             <tr>
-                <td><img src="{{ product.image_url }}" alt="{{ product.name }}" class="table-product-image"></td>
+                <td>
+                    <img src="{{ url_for('static', filename=product.image_url) }}" alt="{{ product.name }}" class="table-product-image">
+                </td>
                 <td><strong>{{ product.name }}</strong></td>
                 <td>{{ product.description }}</td>
                 <td>R$ {{ "%.2f"|format(product.price) }}</td>
