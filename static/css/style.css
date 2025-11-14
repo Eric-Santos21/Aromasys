@@ -143,12 +143,8 @@ a {
 
 .header-categories {
     display: flex;
-    justify-content: center;
-    gap: 25px;
     background-color: #333;
-    padding: 10px 0;
-    font-size: 0.9rem;
-    font-weight: 500;
+    padding: 10px 0; 
 }
 
 /* ======================== */
