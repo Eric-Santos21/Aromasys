@@ -5,47 +5,48 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'sua-chave-secreta-aqui'
 
 # 2. Dados Falsos (Mock)
+# 2. Dados Falsos (Mock)
 mock_products = [
-  {
-    "id": 1,
-    "name": "Egeo",
-    "description": "Cogu Desodorante Colônia 90ml",
-    "old_price": 154.90,
-    "price": 61.90,
-    "installments": "3x R$ 20,63",
-    "image_url": "https://i.imgur.com/gJ5B85m.png",
-    "tag": "-60%"
-  },
-  {
-    "id": 2,
-    "name": "Floratta",
-    "description": "Blue Desodorante Colônia 75ml",
-    "old_price": 159.90,
-    "price": 90.90,
-    "installments": "4x R$ 22,73",
-    "image_url": "https://i.imgur.com/vHqB5bK.png",
-    "tag": "-43%"
-  },
-  {
-    "id": 3,
-    "name": "Match.",
-    "description": "Leave-In Reconstrutor 150ml",
-    "old_price": 54.90,
-    "price": 26.90,
-    "installments": "a vista",
-    "image_url": "https://i.imgur.com/83S9W4L.png",
-    "tag": "-51%"
-  },
-  {
-    "id": 4,
-    "name": "Botik",
-    "description": "Gel Creme Multiprotetor FPS50 40g",
-    "old_price": 87.90,
-    "price": 43.90,
-    "installments": "2x R$ 21,95",
-    "image_url": "https://i.imgur.com/5rBqFf4.png",
-    "tag": "-60%"
-  },
+    {
+        "id": 1,
+        "name": "Egeo",
+        "description": "Cogu Desodorante Colônia 90ml",
+        "old_price": 154.90,
+        "price": 61.90,
+        "installments": "3x R$ 20,63",
+        "image_url": "https://i.imgur.com/gJ5B85m.png",
+        "tag": "-60%"
+    },
+    {
+        "id": 2,
+        "name": "Floratta",
+        "description": "Blue Desodorante Colônia 75ml",
+        "old_price": 159.90,
+        "price": 90.90,
+        "installments": "4x R$ 22,73",
+        "image_url": "https://i.imgur.com/vHqB5bK.png",
+        "tag": "-43%"
+    },
+    {
+        "id": 3,
+        "name": "Match.",
+        "description": "Leave-In Reconstrutor 150ml",
+        "old_price": 54.90,
+        "price": 26.90,
+        "installments": "a vista",
+        "image_url": "https://i.imgur.com/83S9W4L.png",
+        "tag": "-51%"
+    },
+    {
+        "id": 4,
+        "name": "Botik",
+        "description": "Gel Creme Multiprotetor FPS50 40g",
+        "old_price": 87.90,
+        "price": 43.90,
+        "installments": "2x R$ 21,95",
+        "image_url": "https://i.imgur.com/5rBqFf4.png",
+        "tag": "-60%"
+    },
 ]
 mock_cart_items = [
     {
@@ -61,7 +62,7 @@ mock_cart_items = [
         "name": "Match.",
         "description": "Leave-In Reconstrutor 150ml",
         "price": 26.90,
-        "quantity": 2, 
+        "quantity": 2,
         "image_url": "https://i.imgur.com/83S9W4L.png"
     }
 ]
@@ -87,7 +88,7 @@ mock_orders = [
     }
 ]
 
-# 3. Definição das Rotas
+# 3. Definição das Rotas (PAINEL USUÁRIO)
 
 @app.route("/")
 def home():
@@ -97,7 +98,6 @@ def home():
 def login():
     return render_template("login.html")
 
-# (NOVO) Rota para a página de Cadastro
 @app.route("/cadastrar")
 def cadastrar():
     return render_template("cadastrar.html")
@@ -131,6 +131,35 @@ def pagamento():
 def sucesso():
     return render_template("sucesso.html")
 
-# 4. Roda o Aplicativo
+# ===================================
+# 4. Definição das Rotas (PAINEL ADMIN)
+# ===================================
+
+# Rota de Login do Admin
+@app.route("/admin/login")
+def admin_login():
+    return render_template("admin_login.html")
+
+# Rota principal do Admin (Dashboard)
+@app.route("/admin")
+@app.route("/admin/dashboard")
+def admin_dashboard():
+    # Passamos os pedidos para o dashboard
+    return render_template("admin_dashboard.html", orders=mock_orders)
+
+# Rota de Produtos (Edição da Home)
+@app.route("/admin/produtos")
+def admin_produtos():
+    # Passamos os produtos para a tabela
+    return render_template("admin_produtos.html", products=mock_products)
+
+# Rota de Pedidos
+@app.route("/admin/pedidos")
+def admin_pedidos():
+    # Passamos os pedidos para a tabela
+    return render_template("admin_pedidos.html", orders=mock_orders)
+
+
+# 5. Roda o Aplicativo
 if __name__ == "__main__":
     app.run(debug=True)

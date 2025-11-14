@@ -1,0 +1,74 @@
+{% extends "admin_layout.html" %}
+
+<!-- Define o título que o admin_layout.html vai usar -->
+{% set title = 'Dashboard' %}
+{% set active_page = 'dashboard' %}
+
+{% block content %}
+<div class="dashboard-grid">
+    <!-- Card 1: Faturamento do Mês -->
+    <div class="admin-card">
+        <div class="card-icon"><i class="fas fa-dollar-sign"></i></div>
+        <div class="card-info">
+            <span class="card-title">Faturamento (Mês Atual)</span>
+            <span class="card-value">R$ 1.250,30</span>
+            <span class="card-comparison text-success">+5.2% vs Mês Passado</span>
+        </div>
+    </div>
+    
+    <!-- Card 2: Vendas Atuais -->
+    <div class="admin-card">
+        <div class="card-icon"><i class="fas fa-shopping-cart"></i></div>
+        <div class="card-info">
+            <span class="card-title">Vendas (Mês Atual)</span>
+            <span class="card-value">32</span>
+            <span class="card-comparison text-danger">-1.8% vs Mês Passado</span>
+        </div>
+    </div>
+
+    <!-- Card 3: Lucro Total -->
+    <div class="admin-card">
+        <div class="card-icon"><i class="fas fa-piggy-bank"></i></div>
+        <div class="card-info">
+            <span class="card-title">Lucro (Mês Atual)</span>
+            <span class="card-value">R$ 430,10</span>
+            <span class="card-comparison text-success">+8.0% vs Mês Passado</span>
+        </div>
+    </div>
+</div>
+
+<!-- Tabela de Histórico de Pedidos Recentes -->
+<div class="checkout-box" style="margin-top: 30px;">
+    <h3>Histórico de Pedidos Recentes</h3>
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Nº Pedido</th>
+                <th>Data</th>
+                <th>Cliente</th>
+                <th>Valor Total</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td><strong>{{ order.id }}</strong></td>
+                <td>{{ order.date }}</td>
+                <td>(Nome do Cliente)</td>
+                <td>R$ {{ "%.2f"|format(order.total) }}</td>
+                <td>
+                    {% if order.status == 'Entregue' %}
+                        <span class="order-status status-delivered">{{ order.status }}</span>
+                    {% elif order.status == 'Cancelado' %}
+                        <span class="order-status status-cancelled">{{ order.status }}</span>
+                    {% else %}
+                        <span class="order-status">{{ order.status }}</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

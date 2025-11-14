@@ -7,6 +7,11 @@
     --color-light-text: #5f5f5f;
     --color-background-dark: #222;
     --color-background-light: #fff;
+    /* (Novas cores para o Admin) */
+    --admin-bg: #f4f7fa;
+    --admin-sidebar-bg: #1a202c;
+    --admin-sidebar-text: #a0aec0;
+    --admin-card-border: #e2e8f0;
 }
 
 * {
@@ -931,7 +936,6 @@ hr.form-divider {
     margin-top: 5px;
 }
 
-
 /* ======================== */
 /* 12. BARRA DE PROGRESSO (STEPPER) */
 /* ======================== */
@@ -1045,15 +1049,13 @@ hr.form-divider {
 /* ======================== */
 /* 14. TELA DE PERFIL (PERFIL.HTML) */
 /* ======================== */
-
 .profile-page-container {
     display: flex;
-    flex-wrap: wrap; /* Para telas menores */
+    flex-wrap: wrap;
     gap: 30px;
     align-items: flex-start;
 }
 
-/* Menu Lateral */
 .profile-nav {
     flex: 1;
     background-color: #fff;
@@ -1061,7 +1063,7 @@ hr.form-divider {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     min-width: 250px;
     position: sticky;
-    top: 190px; /* Gruda abaixo do header */
+    top: 190px;
 }
 
 .profile-user-info {
@@ -1112,7 +1114,7 @@ hr.form-divider {
 
 .profile-nav li a i {
     font-size: 1.2rem;
-    width: 20px; /* Alinha os ícones */
+    width: 20px;
     text-align: center;
 }
 
@@ -1126,7 +1128,6 @@ hr.form-divider {
     color: #fff;
 }
 
-/* Conteúdo Principal (Pedidos) */
 .profile-content {
     flex: 3;
     min-width: 300px;
@@ -1138,18 +1139,15 @@ hr.form-divider {
     color: var(--color-dark-text);
 }
 
-/* Controle dos Painéis (Abas) */
 .profile-pane {
-    display: none; /* Esconde todos os painéis */
-    animation: fadeIn 0.5s ease; /* Animação suave */
+    display: none;
+    animation: fadeIn 0.5s ease;
 }
 
 .profile-pane.active {
-    display: block; /* Mostra só o painel ativo */
+    display: block;
 }
 
-
-/* Lista de Pedidos */
 .order-list {
     display: flex;
     flex-direction: column;
@@ -1160,7 +1158,7 @@ hr.form-divider {
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    overflow: hidden; /* Para o rodapé ficar contido */
+    overflow: hidden;
 }
 
 .order-header {
@@ -1206,12 +1204,12 @@ hr.form-divider {
 }
 
 .order-status.status-delivered {
-    background-color: #e6f7f3; /* Verde claro */
+    background-color: #e6f7f3;
     color: var(--color-primary-green);
 }
 
 .order-status.status-cancelled {
-    background-color: #fbe9e9; /* Vermelho claro */
+    background-color: #fbe9e9;
     color: #e03131;
 }
 
@@ -1237,21 +1235,18 @@ hr.form-divider {
 }
 
 /* ======================== */
-/* (NOVO) 15. ABA DE ENDEREÇOS (PERFIL.HTML) */
+/* 15. ABA DE ENDEREÇOS (PERFIL.HTML) */
 /* ======================== */
-
 .address-list {
     display: grid;
-    /* Cria colunas, mas no máximo 2 */
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
 }
 
 .address-card {
-    /* Reutiliza o estilo do 'checkout-box' */
     display: flex;
     flex-direction: column;
-    margin-bottom: 0; /* Remove a margem do checkout-box */
+    margin-bottom: 0;
 }
 
 .address-card-header {
@@ -1281,7 +1276,7 @@ hr.form-divider {
 }
 
 .address-card .address-details {
-    flex-grow: 1; /* Empurra as ações para baixo */
+    flex-grow: 1;
     margin-bottom: 0;
 }
 
@@ -1293,7 +1288,6 @@ hr.form-divider {
     margin-top: 15px;
 }
 
-/* Botão de "Excluir" com borda vermelha */
 .btn-danger-outline {
     background-color: transparent;
     color: #e03131;
@@ -1305,14 +1299,13 @@ hr.form-divider {
     color: #e03131;
 }
 
-/* Botão de Adicionar Endereço */
 .address-add-new {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    min-height: 220px; /* Altura similar ao card */
+    min-height: 220px;
     border: 2px dashed #ddd;
     border-radius: 8px;
     background-color: #fdfdfd;
@@ -1334,25 +1327,245 @@ hr.form-divider {
 }
 
 /* ======================== */
-/* (NOVO) 16. TELA DE CADASTRO (CADASTRAR.HTML) */
+/* 16. TELA DE CADASTRO (CADASTRAR.HTML) */
 /* ======================== */
-
-/* Caixa de cadastro (um pouco mais larga que a de login) */
 .register-container {
-    max-width: 600px; 
+    max-width: 600px;
 }
 
-/* Ajustes no formulário de cadastro */
 .register-form {
-    text-align: left; /* Alinha labels à esquerda */
-    gap: 20px; /* Aumenta o espaço */
+    text-align: left;
+    gap: 20px;
 }
 
-/* Botão de Criar Conta */
 .register-form .btn-primary {
     width: 100%;
     padding: 14px;
     font-size: 1.1rem;
     font-weight: 700;
     margin-top: 10px;
+}
+
+/* ======================== */
+/* 17. PAINEL ADMIN */
+/* ======================== */
+/* --- Admin Login --- */
+.admin-login-body {
+    background-color: var(--admin-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.admin-login-container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 400px;
+}
+
+.admin-login-container h1 {
+    text-align: center;
+    color: var(--color-dark-text);
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.admin-login-container p {
+    text-align: center;
+    color: var(--color-light-text);
+    margin-bottom: 30px;
+}
+
+/* --- Admin Layout --- */
+.admin-page-body {
+    background-color: var(--admin-bg);
+    display: flex;
+    color: var(--color-dark-text);
+}
+
+.admin-sidebar {
+    width: 260px;
+    background-color: var(--admin-sidebar-bg);
+    color: var(--admin-sidebar-text);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    padding: 25px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    color: #fff;
+    border-bottom: 1px solid #2d3748;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 15px;
+    flex-grow: 1;
+}
+
+.sidebar-nav li a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar-nav li a i {
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+}
+
+.sidebar-nav li a:hover {
+    background-color: #2d3748;
+    color: #fff;
+}
+
+.sidebar-nav li.active a {
+    background-color: var(--color-primary-green);
+    color: #fff;
+}
+
+.sidebar-footer {
+    padding: 25px;
+    border-top: 1px solid #2d3748;
+}
+
+.sidebar-footer a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-weight: 500;
+}
+
+.sidebar-footer a:hover {
+    color: #fff;
+}
+
+/* Conteúdo Principal do Admin */
+.admin-content {
+    margin-left: 260px;
+    padding: 30px;
+    width: calc(100% - 260px);
+}
+
+.admin-content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.admin-content-header h2 {
+    font-size: 2rem;
+    color: var(--color-dark-text);
+}
+
+/* Cards do Dashboard */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.admin-card {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid var(--admin-card-border);
+    gap: 20px;
+}
+
+.admin-card .card-icon {
+    font-size: 2rem;
+    color: var(--color-primary-green);
+    padding: 15px;
+    background-color: #e6f7f3;
+    border-radius: 50%;
+}
+
+.admin-card .card-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title {
+    font-size: 0.9rem;
+    color: var(--color-light-text);
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.card-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-dark-text);
+}
+
+.card-comparison {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.text-success {
+    color: var(--color-primary-green);
+}
+
+.text-danger {
+    color: #e03131;
+}
+
+/* Tabelas do Admin */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--admin-card-border);
+    vertical-align: middle;
+}
+
+.admin-table th {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    color: var(--color-light-text);
+    background-color: #fdfdfd;
+}
+
+.table-product-image {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    border-radius: 4px;
+    border: 1px solid #eee;
+}
+
+.table-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-small {
+    padding: 8px 12px;
+    font-size: 0.85rem;
 }

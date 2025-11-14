@@ -1,0 +1,36 @@
+{% extends "admin_layout.html" %}
+
+<!-- Define o título que o admin_layout.html vai usar -->
+{% set title = 'Gerenciador de Produtos' %}
+{% set active_page = 'produtos' %}
+
+{% block content %}
+<div class="checkout-box">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Foto</th>
+                <th>Nome do Produto</th>
+                <th>Descrição</th>
+                <th>Preço</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Puxamos os produtos do 'mock_products' -->
+            {% for product in products %}
+            <tr>
+                <td><img src="{{ product.image_url }}" alt="{{ product.name }}" class="table-product-image"></td>
+                <td><strong>{{ product.name }}</strong></td>
+                <td>{{ product.description }}</td>
+                <td>R$ {{ "%.2f"|format(product.price) }}</td>
+                <td class="table-actions">
+                    <button class="btn-secondary btn-small"><i class="fas fa-edit"></i> Editar</button>
+                    <button class="btn-danger-outline btn-small"><i class="fas fa-trash"></i> Excluir</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

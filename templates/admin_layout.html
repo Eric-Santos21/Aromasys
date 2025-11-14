@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- A variável 'title' será definida por quem estender este layout -->
+    <title>{{ title }} - AromaSys Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="admin-page-body">
+    
+    <!-- Menu Lateral Fixo -->
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            AromaSys Admin
+        </div>
+        <ul class="sidebar-nav">
+            <!-- Os links 'active' serão definidos pela página -->
+            <li class="{{ 'active' if active_page == 'dashboard' else '' }}">
+                <a href="{{ url_for('admin_dashboard') }}">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </a>
+            </li>
+            <li class="{{ 'active' if active_page == 'produtos' else '' }}">
+                <a href="{{ url_for('admin_produtos') }}">
+                    <i class="fas fa-box-open"></i> Produtos
+                </a>
+            </li>
+            <li class="{{ 'active' if active_page == 'pedidos' else '' }}">
+                <a href="{{ url_for('admin_pedidos') }}">
+                    <i class="fas fa-receipt"></i> Pedidos
+                </a>
+            </li>
+        </ul>
+        <div class="sidebar-footer">
+            <a href="{{ url_for('home') }}">
+                <i class="fas fa-sign-out-alt"></i> Voltar ao Site
+            </a>
+        </div>
+    </aside>
+
+    <!-- Conteúdo Principal -->
+    <main class="admin-content">
+        <div class="admin-content-header">
+            <h2>{{ title }}</h2>
+            <!-- (Exemplo: Botão de Ação Rápida) -->
+            {% if active_page == 'produtos' %}
+                <button class="btn-primary"><i class="fas fa-plus"></i> Adicionar Produto</button>
+            {% endif %}
+        </div>
+        
+        <!-- O conteúdo da página (dashboard, produtos, etc.) entra aqui -->
+        {% block content %}{% endblock %}
+    </main>
+
+</body>
+</html>
