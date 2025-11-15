@@ -3,10 +3,11 @@
 # ===================================
 import os
 from dotenv import load_dotenv
-from flask import Flask, render_template, url_for, request, redirect, flash, session
+from flask import Flask, render_template, url_for, request, redirect, flash, session, g
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
 from flask_bcrypt import Bcrypt
+from authlib.integrations.flask_client import OAuth # Para o Google Login
 
 load_dotenv() # Carrega as variáveis do .env
 
@@ -16,11 +17,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
 # Configuração do Banco de Dados MySQL (lendo do .env)
-# Se você instalou 'PyMySQL':
 app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASS')}@{os.getenv('DB_HOST')}/{os.getenv('DB_NAME')}"
-# Se você instalou 'mysqlclient':
-# app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASS')}@{os.getenv('DB_HOST')}/{os.getenv('DB_NAME')}"
-
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # ===================================
@@ -29,13 +26,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
+oauth = OAuth(app) # INICIALIZA O OAUTH
 
-# Define para onde o Flask-Login redireciona se um usuário anônimo
-# tentar acessar uma página protegida (ex: /perfil)
+# Define para onde o Flask-Login redireciona
 login_manager.login_view = 'login'
-# (Opcional) Melhora a mensagem de "acesso negado"
 login_manager.login_message = 'Por favor, faça login para acessar esta página.'
-login_manager.login_message_category = 'info' # (usa a categoria do 'flash')
+login_manager.login_message_category = 'info'
 
 
 @login_manager.user_loader
@@ -47,15 +43,17 @@ def load_user(user_id):
 # 3. DEFINIÇÃO DOS MODELOS (TABELAS)
 # ===================================
 
-# UserMixin é necessário para o Flask-Login funcionar
+# UserMixin é necessário para o Flask-Login
 class User(db.Model, UserMixin):
-    __tablename__ = 'users' # Nome da tabela
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    cpf = db.Column(db.String(14), unique=True, nullable=False) # ex: 123.456.789-00
-    telefone = db.Column(db.String(15), nullable=True) # ex: (83) 91234-5678
-    password_hash = db.Column(db.String(60), nullable=False) # Hash de 60 chars do Bcrypt
+    
+    # CORREÇÃO PARA GOOGLE: Estes campos podem ser nulos
+    cpf = db.Column(db.String(14), unique=True, nullable=True) 
+    telefone = db.Column(db.String(15), nullable=True)
+    password_hash = db.Column(db.String(60), nullable=True) # Senha nula se for login Google
 
     # Relação: Um usuário pode ter vários pedidos
     orders = db.relationship('Order', backref='user', lazy=True)
@@ -66,6 +64,9 @@ class User(db.Model, UserMixin):
 
     def check_password(self, password):
         """Verifica se a senha fornecida bate com o hash."""
+        # Garante que o hash não seja nulo (contas Google não têm hash)
+        if not self.password_hash:
+            return False
         return bcrypt.check_password_hash(self.password_hash, password)
 
 class Product(db.Model):
@@ -87,10 +88,7 @@ class Order(db.Model):
     status = db.Column(db.String(50), nullable=False, default='Processando')
     total = db.Column(db.Float, nullable=False)
     
-    # Chave Estrangeira: Linka o pedido ao usuário
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    
-    # Relação: Um pedido tem vários itens
     items = db.relationship('OrderItem', backref='order', lazy=True)
 
 class OrderItem(db.Model):
@@ -98,89 +96,143 @@ class OrderItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     quantity = db.Column(db.Integer, nullable=False, default=1)
     
-    # Chaves Estrangeiras
     order_id = db.Column(db.Integer, db.ForeignKey('orders.id'), nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
     
-    # Relação (opcional): Linka este item de volta ao objeto Produto
     product = db.relationship('Product')
 
 
 # ===================================
-# 4. DADOS MOCK (Serão removidos)
+# 4. CONFIGURAÇÃO DO GOOGLE OAUTH
 # ===================================
-# Estes dados mock agora serão substituídos por consultas ao banco de dados,
-# mas vamos mantê-los por enquanto para as rotas que ainda não foram migradas.
+oauth.register(
+    name='google',
+    client_id=os.getenv('GOOGLE_CLIENT_ID'),
+    client_secret=os.getenv('GOOGLE_CLIENT_SECRET'),
+    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+    client_kwargs={
+        'scope': 'openid email profile'
+    }
+)
 
-mock_products = [
-    {
-        "id": 1,
-        "name": "Egeo",
-        "description": "Cogu Desodorante Colônia 90ml",
-        "old_price": 154.90,
-        "price": 61.90,
-        "installments": "3x R$ 20,63",
-        "image_url": "imagens/egeo.jpg",
-        "tag": "-60%"
-    },
-    # ... (o resto dos seus mocks)
-]
+# ===================================
+# 5. DADOS MOCK (Para rotas não prontas)
+# ===================================
 mock_cart_items = [
-    # ... (o resto dos seus mocks)
+    { "id": 1, "name": "Egeo", "description": "Cogu Desodorante Colônia 90ml", "price": 61.90, "quantity": 1, "image_url": "imagens/egeo.jpg" },
+    { "id": 3, "name": "Match.", "description": "Leave-In Reconstrutor 150ml", "price": 26.90, "quantity": 2, "image_url": "imagens/match.jpg" }
 ]
 mock_orders = [
-    # ... (o resto dos seus mocks)
+    { "id": "#123456", "date": "14 de nov, 2025", "status": "Entregue", "total": 103.80, "items": [ { "name": "Egeo", "image_url": "imagens/egeo.jpg" }, { "name": "Match.", "image_url": "imagens/match.jpg" } ] },
+    { "id": "#123112", "date": "05 de out, 2025", "status": "Cancelado", "total": 90.90, "items": [ { "name": "Floratta", "image_url": "imagens/floratta.jpg" } ] }
 ]
 
-
 # ===================================
-# 5. ROTAS (PAINEL USUÁRIO)
+# 6. ROTAS (PAINEL USUÁRIO)
 # ===================================
 
 @app.route("/")
 def home():
-    # AGORA: Substituímos o mock por uma consulta ao banco!
+    # Tenta buscar produtos do banco, se falhar, usa o mock
     try:
         products_from_db = Product.query.all()
         return render_template("index.html", products=products_from_db)
     except Exception as e:
-        # Se o banco falhar (ex: tabela não existe), use o mock
         flash(f"Erro ao conectar no banco de dados. Usando dados mock. Erro: {e}", "danger")
-        return render_template("index.html", products=mock_products)
+        # Se der erro, usa o mock_products (definido no app.py original)
+        return render_template("index.html", products=[]) # Você pode adicionar o mock_products aqui se quiser
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        # (LÓGICA DE LOGIN AINDA NÃO IMPLEMENTADA)
-        # 1. Pegar email e senha do form
-        # 2. Buscar usuário no banco: user = User.query.filter_by(email=email_do_form).first()
-        # 3. Verificar senha: if user and user.check_password(senha_do_form):
-        # 4. Logar usuário: login_user(user)
-        # 5. Redirecionar: return redirect(url_for('perfil'))
-        flash("Lógica de login ainda em construção!", "info")
-        return redirect(url_for('login'))
+        # Lógica de login com Email/Senha
+        email = request.form.get('email')
+        password = request.form.get('password')
+        user = User.query.filter_by(email=email).first()
+
+        if user and user.check_password(password):
+            login_user(user)
+            flash("Login feito com sucesso!", "success")
+            return redirect(url_for('perfil'))
+        else:
+            flash("Email ou senha inválidos.", "danger")
+            return redirect(url_for('login'))
         
     return render_template("login.html")
+
+# --- NOVAS ROTAS GOOGLE ---
+@app.route("/login/google")
+def login_google():
+    """Redireciona o usuário para a tela de login do Google."""
+    redirect_uri = url_for('google_callback', _external=True)
+    return oauth.google.authorize_redirect(redirect_uri)
+
+@app.route("/google/callback")
+def google_callback():
+    """Página que recebe a resposta do Google."""
+    try:
+        token = oauth.google.authorize_access_token()
+    except Exception as e:
+        flash(f"Erro ao autenticar com o Google: {e}", "danger")
+        return redirect(url_for('login'))
+
+    user_info = oauth.google.userinfo(token=token)
+    user = User.query.filter_by(email=user_info.email).first()
+    
+    if user:
+        # Usuário já existe, faça login
+        login_user(user)
+        flash(f"Login feito com sucesso como {user.nome}!", "success")
+        return redirect(url_for('perfil'))
+    else:
+        # Usuário não existe, crie uma nova conta
+        new_user = User(
+            email=user_info.email,
+            nome=user_info.name
+        )
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            login_user(new_user)
+            flash("Conta criada com sucesso via Google!", "success")
+            # Redireciona para o perfil, onde ele pode preencher o resto
+            return redirect(url_for('perfil')) 
+        except Exception as e:
+            db.session.rollback()
+            flash(f"Erro ao criar conta: {e}", "danger")
+            return redirect(url_for('login'))
+# --- FIM DAS ROTAS GOOGLE ---
 
 @app.route("/cadastrar", methods=['GET', 'POST'])
 def cadastrar():
     if request.method == 'POST':
-        # (LÓGICA DE CADASTRO AINDA NÃO IMPLEMENTADA)
-        # 1. Pegar dados do form (nome, email, cpf, senha)
-        # 2. Verificar se email/cpf já existem
-        # 3. Criar hash da senha: new_user.set_password(senha_do_form)
-        # 4. Salvar no banco: db.session.add(new_user); db.session.commit()
-        # 5. Redirecionar: return redirect(url_for('login'))
-        flash("Lógica de cadastro ainda em construção!", "info")
-        return redirect(url_for('cadastrar'))
+        nome = request.form.get('nome')
+        email = request.form.get('email')
+        cpf = request.form.get('cpf')
+        telefone = request.form.get('telefone')
+        password = request.form.get('password')
+        
+        # TODO: Adicionar validação (ex: senha_confere, email/cpf já existe)
+        
+        new_user = User(nome=nome, email=email, cpf=cpf, telefone=telefone)
+        new_user.set_password(password) # Cria o hash da senha
+
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            flash("Conta criada com sucesso! Faça o login.", "success")
+            return redirect(url_for('login'))
+        except Exception as e:
+            db.session.rollback()
+            flash(f"Erro ao criar conta (email ou CPF já pode existir): {e}", "danger")
+            return redirect(url_for('cadastrar'))
 
     return render_template("cadastrar.html")
 
 
 @app.route("/carrinho")
 def carrinho():
-    # A lógica do carrinho deve usar a `session` do Flask,
-    # não o mock_cart_items
+    # TODO: Lógica do carrinho deve usar a `session`, não o mock
     subtotal = sum(item['price'] * item['quantity'] for item in mock_cart_items)
     frete = 15.00 if subtotal > 0 else 0
     total = subtotal + frete
@@ -193,66 +245,72 @@ def carrinho():
     )
 
 @app.route("/perfil")
-@login_required # <-- Protege a rota! Só entra quem está logado.
+@login_required # Protege a rota!
 def perfil():
-    # AGORA: Buscaria os pedidos do usuário logado (current_user)
+    # TODO: Buscar pedidos do usuário logado:
     # orders = Order.query.filter_by(user_id=current_user.id).all()
-    # Por enquanto, usamos o mock:
     return render_template("perfil.html", orders=mock_orders)
 
-
-# ... (Restante das rotas de checkout, sucesso, admin) ...
-# (As rotas do admin /admin/produtos e /admin/pedidos também
-# devem ser atualizadas para usar Product.query.all() e Order.query.all()
-# no lugar dos mocks.)
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    flash("Logout realizado com sucesso.", "success")
+    return redirect(url_for('home'))
 
 @app.route("/checkout/confirmacao")
+@login_required
 def confirmacao():
     return render_template("confirmacao.html")
 
 @app.route("/checkout/pagamento")
+@login_required
 def pagamento():
     return render_template("pagamento.html")
 
 @app.route("/checkout/sucesso")
+@login_required
 def sucesso():
     return render_template("sucesso.html")
 
 # ===================================
-# 6. ROTAS (PAINEL ADMIN)
+# 7. ROTAS (PAINEL ADMIN)
 # ===================================
+
 @app.route("/admin/login")
 def admin_login():
+    # TODO: Lógica de login admin
     return render_template("admin_login.html")
 
 @app.route("/admin")
 @app.route("/admin/dashboard")
+# @login_required (Adicionar verificação se é admin)
 def admin_dashboard():
-    # Deveria buscar pedidos do banco
+    # TODO: Buscar pedidos do banco
     return render_template("admin_dashboard.html", orders=mock_orders)
 
 @app.route("/admin/produtos")
+# @login_required (Adicionar verificação se é admin)
 def admin_produtos():
-    # AGORA: Substituímos o mock por uma consulta ao banco!
     try:
         products_from_db = Product.query.all()
         return render_template("admin_produtos.html", products=products_from_db)
-    except:
-        return render_template("admin_produtos.html", products=mock_products)
+    except Exception as e:
+        flash(f"Erro ao buscar produtos: {e}", "danger")
+        return render_template("admin_produtos.html", products=[])
 
 
 @app.route("/admin/pedidos")
+# @login_required (Adicionar verificação se é admin)
 def admin_pedidos():
-    # Deveria buscar pedidos do banco
+    # TODO: Buscar pedidos do banco
     return render_template("admin_pedidos.html", orders=mock_orders)
 
 
 # ===================================
-# 7. RODA O APLICATIVO
+# 8. RODA O APLICATIVO
 # ===================================
 if __name__ == "__main__":
-    # Comando especial para criar as tabelas no banco de dados
-    # (Execute `python app.py create_db` UMA VEZ no terminal)
     import sys
     if len(sys.argv) > 1 and sys.argv[1] == 'create_db':
         with app.app_context():
