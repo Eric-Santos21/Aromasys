@@ -21,7 +21,7 @@
         <div class="card-icon"><i class="fas fa-shopping-cart"></i></div>
         <div class="card-info">
             <span class="card-title">Vendas (Mês Atual)</span>
-            <span class="card-value">32</span>
+            <span class="card-value">{{ vendas_mes }}</span>
             <span class="card-comparison text-danger">-1.8% vs Mês Passado</span>
         </div>
     </div>
@@ -31,7 +31,7 @@
         <div class="card-icon"><i class="fas fa-piggy-bank"></i></div>
         <div class="card-info">
             <span class="card-title">Lucro (Mês Atual)</span>
-            <span class="card-value">R$ 430,10</span>
+            <span class="card-value">R$ {{ '%.2f'|format(lucro_mes) }}</span>
             <span class="card-comparison text-success">+8.0% vs Mês Passado</span>
         </div>
     </div>
@@ -55,7 +55,7 @@
             <tr>
                 <td><strong>{{ order.id }}</strong></td>
                 <td>{{ order.date }}</td>
-                <td>(Nome do Cliente)</td>
+                <td>{{ order.user.nome }}</td>
                 <td>R$ {{ "%.2f"|format(order.total) }}</td>
                 <td>
                     {% if order.status == 'Entregue' %}

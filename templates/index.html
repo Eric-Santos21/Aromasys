@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <h2>Beauty November</h2>
+    <h2>Catálogo</h2>
     
     <div class="product-grid">
     
@@ -31,7 +31,7 @@
                 </div>
             </div>
             
-            <button class="add-to-cart-button">
+            <button class="add-to-cart-button" data-id="{{ product.id }}">
                 <i class="fas fa-cart-plus"></i>
             </button>
         </div>
@@ -83,17 +83,22 @@
         addButtons.forEach(button => {
             button.addEventListener('click', function(event) {
                 
-                // 1. Encontra o "card" pai do botão que foi clicado
-                const card = event.target.closest('.product-card');
-                
-                // 2. Dentro desse card, encontra o 'h3' que tem o nome do produto
+                const buttonEl = event.currentTarget;
+                const productId = buttonEl.dataset.id;
+                const card = buttonEl.closest('.product-card');
                 const productName = card.querySelector('.product-info h3').textContent;
-                
-                // 3. Chama nossa função de toast com a mensagem!
-                showToast(productName + ' foi adicionado à sacola!');
-                
-                // (No futuro, é aqui que você faria a chamada ao backend)
-                // ex: fetch('/carrinho/add/' + productId, { method: 'POST' });
+
+                // Chamada ao backend
+                fetch('/carrinho/add/' + productId, {
+                    method: 'POST'
+                }).then(resp => resp.json())
+                  .then(data => {
+                      if (data.status === 'added') {
+                          showToast(productName + ' foi adicionado à sacola!');
+                      } else {
+                          showToast('Erro ao adicionar produto');
+                      }
+                  }).catch(() => showToast('Erro na conexão'));
             });
         });
     });

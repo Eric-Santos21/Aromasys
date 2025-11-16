@@ -25,18 +25,32 @@
                 AromaSys
             </a>
 
-            <div class="search-bar">
-                <input type="text" placeholder="Novos itens e mais descontos" />
-                <button class="search-button">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
+            <form action="{{ url_for('home') }}" method="GET" class="search-bar">
+    
+    <input type="text"
+           name="q"
+           placeholder="Novos itens e mais descontos"
+           value="{{ request.args.get('q', '') }}" />
+           
+    <button type="submit" class="search-button">
+        <i class="fas fa-search"></i>
+    </button>
+
+</form>
 
             <nav class="header-nav">
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('perfil') }}" class="nav-link">
+            {% else %}
                 <a href="{{ url_for('login') }}" class="nav-link">
+            {% endif %}
                     <i class="fas fa-user"></i>
                     <div>
-                        <span>Olá! Entre ou</span>
+                        {% if current_user.is_authenticated %}
+                            <span>Olá, {{ current_user.nome.split(' ')[0] }}!</span>
+                        {% else %}
+                            <span>Olá! Entre ou</span>
+                        {% endif %}
                         <strong>Minha Conta</strong>
                     </div>
                 </a>

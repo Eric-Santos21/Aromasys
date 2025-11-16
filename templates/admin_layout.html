@@ -6,6 +6,7 @@
     <!-- A variável 'title' será definida por quem estender este layout -->
     <title>{{ title }} - AromaSys Admin</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
@@ -49,7 +50,7 @@
             <h2>{{ title }}</h2>
             <!-- (Exemplo: Botão de Ação Rápida) -->
             {% if active_page == 'produtos' %}
-                <button class="btn-primary"><i class="fas fa-plus"></i> Adicionar Produto</button>
+                <a href="{{ url_for('admin_produto_novo') }}" class="btn-primary"><i class="fas fa-plus"></i> Adicionar Produto</a>
             {% endif %}
         </div>
         

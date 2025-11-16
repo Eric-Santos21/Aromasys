@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="order-details-page">
+    <a href="{{ url_for('perfil') }}" class="link-voltar" style="margin-bottom:20px;display:inline-block">
+        <i class="fas fa-arrow-left"></i> Voltar para Meus Pedidos
+    </a>
+
+    <h2>Pedido #{{ order.id }}</h2>
+    <p><strong>Data:</strong> {{ order.date.strftime('%d/%m/%Y %H:%M') }}</p>
+    <p><strong>Status:</strong> {{ order.status }}</p>
+
+    <div class="order-items-list" style="margin-top:25px">
+        {% for item in order.items %}
+        {% set img = item.product.image_url %}
+        <div class="order-item-card" style="display:flex;gap:15px;align-items:center;margin-bottom:15px">
+            <img src="{{ url_for('static', filename=img) if img and 'http' not in img else img }}"
+                 alt="{{ item.product.name }}"
+                 style="width:60px;height:60px;object-fit:cover;border-radius:4px">
+            <div style="flex:1">
+                <strong>{{ item.product.name }}</strong><br>
+                <small>{{ item.product.description }}</small>
+            </div>
+            <div>x{{ item.quantity }}</div>
+            <div style="min-width:90px;text-align:right">
+                R$ {{ '%.2f'|format(item.product.price * item.quantity) }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <hr>
+    <div class="order-summary" style="max-width:300px;margin-top:15px">
+        <div class="summary-row" style="display:flex;justify-content:space-between">
+            <span>Subtotal</span>
+            <span>R$ {{ '%.2f'|format(order.total) }}</span>
+        </div>
+        <div class="summary-row" style="display:flex;justify-content:space-between">
+            <span>Frete</span>
+            <span>Grátis</span>
+        </div>
+        <div class="summary-divider" style="height:1px;background:#eee;margin:8px 0"></div>
+        <div class="summary-total" style="display:flex;justify-content:space-between;font-weight:600">
+            <span>Total</span>
+            <span>R$ {{ '%.2f'|format(order.total) }}</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

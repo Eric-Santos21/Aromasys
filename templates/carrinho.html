@@ -26,7 +26,7 @@
         <h2>Minha Sacola</h2>
         {% if cart_items %}
             {% for item in cart_items %}
-            <div class="cart-item" data-price="{{ item.price }}"> 
+            <div class="cart-item" data-price="{{ item.price }}" data-product-id="{{ item.id }}"> 
                 <div class="cart-item-image">
                     <img src="{{ url_for('static', filename=item.image_url) }}" alt="{{ item.name }}">
                 </div>
@@ -190,11 +190,19 @@
                     showToast('Item reduzido');
                 }
 
+                // Atualiza o backend
+                const cartItem = this.closest('.cart-item');
+                const productId = cartItem.dataset.productId;
+                fetch('/carrinho/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ product_id: productId, quantity: currentValue })
+                }).then(r => r.json()).catch(() => {});
+
                 // Atualiza o valor no input
                 input.value = currentValue;
 
                 // Atualiza o preço total do item (ex: R$ 26,90 * 2 = R$ 53,80)
-                const cartItem = this.closest('.cart-item');
                 const price = parseFloat(cartItem.dataset.price);
                 const itemTotalElement = cartItem.querySelector('.item-total-price');
                 itemTotalElement.textContent = formatCurrency(currentValue * price);
@@ -216,12 +224,20 @@
                 // Adiciona a classe CSS para a animação de "fade-out"
                 cartItem.classList.add('removing');
 
-                // Espera a animação (300ms) terminar antes de remover
-                // o item do HTML e recalcular o total
-                setTimeout(() => {
-                    cartItem.remove();
-                    updateCartSummary();
-                }, 300); // 300ms
+                // Atualiza backend para remover
+                const productId = cartItem.dataset.productId;
+                fetch('/carrinho/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ product_id: productId, quantity: 0 })
+                }).then(()=>{
+                    // Espera a animação (300ms) terminar antes de remover
+                    // o item do HTML e recalcular o total
+                    setTimeout(() => {
+                        cartItem.remove();
+                        updateCartSummary();
+                    }, 300);
+                });
             });
         });
     });

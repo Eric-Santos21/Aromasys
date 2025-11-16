@@ -6,8 +6,8 @@
     <nav class="profile-nav">
         <div class="profile-user-info">
             <div class="profile-placeholder-icon"><i class="fas fa-user"></i></div>
-            <h4>(Nome do Usuário)</h4>
-            <p>(usuario@email.com)</p>
+            <h4>{{ current_user.nome or 'Usuário' }}</h4>
+            <p>{{ current_user.email }}</p>
         </div>
 
         <ul id="profile-menu">
@@ -30,7 +30,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ url_for('home') }}">
+                <a href="{{ url_for('logout') }}">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Sair</span>
                 </a>
@@ -69,16 +69,17 @@
                         {% endif %}
                     </div>
                     <div class="order-items-preview">
-                        {% for item in order['items'] %}
-                        {% if 'http' in item.image_url %}
-                            <img src="{{ item.image_url }}" alt="{{ item.name }}" title="{{ item.name }}">
+                        {% for item in order.items %}
+                        {% set img = item.product.image_url %}
+                        {% if img and 'http' in img %}
+                            <img src="{{ img }}" alt="{{ item.product.name }}" title="{{ item.product.name }}">
                         {% else %}
-                            <img src="{{ url_for('static', filename=item.image_url) }}" alt="{{ item.name }}" title="{{ item.name }}">
+                            <img src="{{ url_for('static', filename=img) }}" alt="{{ item.product.name }}" title="{{ item.product.name }}">
                         {% endif %}
                         {% endfor %}
                     </div>
                     <div class="order-footer">
-                        <a href="#" class="btn-secondary">Ver Detalhes do Pedido</a>
+                        <a href="{{ url_for('pedido_detalhes', order_id=order.id) }}" class="btn-secondary">Ver Detalhes do Pedido</a>
                     </div>
                 </div>
                 {% endfor %}
@@ -93,34 +94,23 @@
         </div> <div id="meus-dados-pane" class="profile-pane">
             <h2>Meus Dados</h2>
             <div class="checkout-box">
-                <form class="card-form">
+                <form class="card-form" action="{{ url_for('perfil') }}" method="POST">
                     <div class="form-group">
                         <label for="nome-completo">Nome Completo</label>
-                        <input type="text" id="nome-completo" placeholder="(Nome do Usuário)">
+                        <input type="text" id="nome-completo" name="nome" value="{{ current_user.nome }}" placeholder="Nome Completo" required>
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" placeholder="(usuario@email.com)"> 
+                        <input type="email" id="email" name="email" value="{{ current_user.email }}" placeholder="Email" required> 
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="cpf">CPF</label>
-                            <input type="text" id="cpf" placeholder="123.456.789-00" maxlength="14"> 
+                            <input type="text" id="cpf" name="cpf" value="{{ current_user.cpf|format_cpf }}" placeholder="123.456.789-00" maxlength="14"> 
                         </div>
                         <div class="form-group">
                             <label for="telefone">Telefone / Celular</label>
-                            <input type="text" id="telefone" placeholder="(83) 91234-5678" maxlength="15">
-                        </div>
-                    </div>
-                    <hr class="form-divider">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="senha-atual">Alterar Senha (opcional)</label>
-                            <input type="password" id="senha-atual" placeholder="Digite sua senha atual">
-                        </div>
-                        <div class="form-group">
-                            <label for="senha-nova">Nova Senha</label>
-                            <input type="password" id="senha-nova" placeholder="Digite a nova senha">
+                            <input type="text" id="telefone" name="telefone" value="{{ current_user.telefone|format_phone }}" placeholder="(83) 91234-5678" maxlength="15">
                         </div>
                     </div>
                     
@@ -132,24 +122,42 @@
         </div> <div id="enderecos-pane" class="profile-pane">
             <h2>Meus Endereços</h2>
             <div class="address-list">
+                {% if current_user.enderecos %}
                 <div class="address-card checkout-box">
                     <div class="address-card-header">
-                        <strong><i class="fas fa-home"></i> Casa</strong>
-                        <span class="address-tag-default">Padrão</span>
+                        <strong><i class="fas fa-home"></i> Endereço</strong>
                     </div>
                     <div class="address-details">
-                        <p>Rua Exemplo dos Perfumes, 123</p>
-                        <p>Centro, Cidade Fictícia - UF, 00000-000</p>
+                        <p>{{ current_user.enderecos }}</p>
                     </div>
                     <div class="address-card-actions">
-                        <a href="#" class="btn-secondary">Editar</a>
-                        <a href="#" class="btn-secondary btn-danger-outline">Excluir</a>
+                        <button class="btn-secondary" onclick="document.getElementById('address-form').style.display='flex'">Editar</button>
                     </div>
                 </div>
-                <button class="address-add-new">
+                {% endif %}
+
+                <button class="address-add-new" onclick="document.getElementById('address-form').style.display='flex'">
                     <i class="fas fa-plus"></i>
-                    <span>Adicionar Novo Endereço</span>
+                    <span>{% if current_user.enderecos %}Alterar Endereço{% else %}Adicionar Novo Endereço{% endif %}</span>
                 </button>
+
+                <form id="address-form" class="modal-form" action="{{ url_for('perfil') }}" method="POST" style="display:none; flex-direction: column; gap: 8px;">
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1">
+                            <label>Rua / Avenida</label>
+                            <input type="text" name="rua" required value="{{ (current_user.enderecos.split(',')[0]).strip() if current_user.enderecos else '' }}">
+                        </div>
+                        <div class="form-group" style="max-width:140px">
+                            <label>Número</label>
+                            <input type="text" name="numero" required value="{{ current_user.enderecos.split(',')[1].split('-')[0].strip() if current_user.enderecos and ',' in current_user.enderecos else '' }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Complemento (opcional)</label>
+                        <input type="text" name="complemento" value="{{ current_user.enderecos.split('-')[1].strip() if current_user.enderecos and '-' in current_user.enderecos else '' }}">
+                    </div>
+                    <button type="submit" class="btn-primary" style="align-self:flex-start">Salvar</button>
+                </form>
             </div>
         </div> </div>
 </div>
@@ -184,6 +192,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         
         // --- Lógica das Abas ---
+        const initialTab = "{{ initial_tab|default('') }}";
         const menuItems = document.querySelectorAll('#profile-menu li');
         const panes = document.querySelectorAll('.profile-pane');
 
@@ -199,6 +208,16 @@
                 });
             }
         });
+
+        // Ativa a aba inicial se foi definida pelo backend
+        if (initialTab) {
+            const toActivate = document.querySelector(`#profile-menu li[data-target="${initialTab}"]`);
+            if (toActivate) {
+                toActivate.classList.add('active');
+                panes.forEach(p => p.classList.remove('active'));
+                document.getElementById(initialTab).classList.add('active');
+            }
+        }
 
         // --- Lógica das Máscaras ---
         

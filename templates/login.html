@@ -9,36 +9,41 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
-<body class="login-page-body"> <div class="login-container">
+<body class="login-page-body"> 
+    <div class="login-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flash-messages">
+            {% for category, message in messages %}
+                <li class="flash {{ category }}">{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        {% endwith %}
         
         <h1><a href="{{ url_for('home') }}" class="header-logo">AromaSys</a></h1>
         
         <p>Faça login ou crie sua conta.</p>
         
-        <form action="{{ url_for('login') }}" method="POST"> <label for="email">Email</label>
-            <input type="email" id="email" name="email">
+        <form action="{{ url_for('login') }}" method="POST"> 
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="seu@email.com" required>
             
             <label for="password">Senha</label>
-            <input type="password" id="password" name="password">
+            <input type="password" id="password" name="password" placeholder="********" required>
             
             <button type="submit">Entrar</button>
         </form>
         
-        <div class="divider">
-            <span>ou</span>
-        <div class="divider">
-            <span>ou</span>
-        </div>
+        <div class="divider"><span>ou</span></div>
 
             <a href="{{ url_for('login_google') }}" class="btn-google">
             <img src="https://pngimg.com/uploads/google/google_PNG19630.png" alt="Google" class="google-icon">
         Criar conta com o Google
         </a>
         
-        <!-- (MUDANÇA AQUI) Novo link para cadastro -->
-        <a href="{{ url_for('cadastrar') }}" class="link-voltar" style="font-weight: 700;">
-            Não tem conta? Cadastre-se
-        </a>
+        <a href="{{ url_for('cadastrar') }}" class="link-voltar" style="font-weight: 700;">Não tem conta? Cadastre-se</a>
+        <a href="{{ url_for('home') }}" class="link-voltar" style="margin-top:4px;">Voltar para a Home</a>
     </div>
 
 </body>
